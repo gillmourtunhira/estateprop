@@ -1,0 +1,86 @@
+.properties-filter-cta{
+    position: absolute;
+    bottom: 230px;
+    left: 0;
+    right: 0;
+    max-width: 800px;
+    margin: 0 auto;
+    .filter-box {
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      
+      .filter-box .form-select {
+        border-radius: 8px;
+        padding: 10px 14px;
+        min-width: 160px;
+      }
+      
+      .filter-box .btn-icon {
+        border-radius: 8px;
+        height: 48px;
+        width: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .filter-box .btn-primary {
+        border-radius: 8px;
+        height: 48px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      
+      .filter-box select:focus,
+      .filter-box .btn:focus {
+        box-shadow: none;
+      }
+      
+      /* ===== Responsive Adjustments ===== */
+      
+      /* Tablets (≤991px) */
+      @media (max-width: 991.98px) {
+        .filter-box {
+          gap: 10px;
+        }
+      
+        .filter-box .form-select {
+          flex: 1 1 45%;
+        }
+      
+        .filter-box .btn-icon,
+        .filter-box .btn-primary {
+          flex: 1 1 45%;
+        }
+      }
+      
+      /* Mobile (≤575px) */
+      @media (max-width: 575.98px) {
+        .filter-box {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      
+        .filter-box .form-select,
+        .filter-box .btn-icon,
+        .filter-box .btn-primary {
+          width: 100%;
+        }
+      
+        .filter-box .btn-icon {
+          order: 3; /* optional: place it below selects */
+        }
+      
+        .filter-box .btn-primary {
+          order: 4;
+        }
+      }
+      
+}
+  

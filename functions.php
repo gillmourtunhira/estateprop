@@ -7,6 +7,7 @@ require_once get_template_directory() .
 require_once get_template_directory() . "/inc/classes/Bootstrap_Helper.php";
 require_once get_template_directory() . "/inc/classes/class-shortcodes.php";
 require_once get_template_directory() . "/inc/utilities.php";
+require_once get_template_directory() . "/inc/post-types.php";
 
 new CraftedTheme_Shortcodes();
 
@@ -56,8 +57,17 @@ function crafted_theme_enqueue_assets()
         true
     );
 
-    wp_localize_script('load-more', 'ajax_object', [
+    // Localize once with all necessary data
+    wp_localize_script('properties-ajax', 'propertiesAjax', [
         'ajax_url' => admin_url('admin-ajax.php'),
+        'filter_nonce' => wp_create_nonce('property_filter_nonce'),
+        'load_more_nonce' => wp_create_nonce('load_more_nonce'),
+        'posts_per_page' => get_option('posts_per_page'),
+        'text' => [
+            'loading' => __('Loading...', 'textdomain'),
+            'no_more' => __('No more properties', 'crafted-theme'),
+            'error' => __('Something went wrong', 'crafted-theme'),
+        ]
     ]);
 }
 add_action("wp_enqueue_scripts", "crafted_theme_enqueue_assets");

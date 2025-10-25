@@ -36,3 +36,69 @@ function load_more_posts_ajax()
 }
 add_action('wp_ajax_load_more_posts', 'load_more_posts_ajax');
 add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts_ajax');
+
+// AJAX handler for property filtering
+function filter_properties_ajax() {
+    // Verify nonce
+    check_ajax_referer('property_filter_nonce', 'nonce');
+    
+    // Get filter parameters
+    $category = sanitize_text_field($_POST['property_category']);
+    $type = sanitize_text_field($_POST['property_type']);
+    $location = sanitize_text_field($_POST['property_location']);
+    
+    // Build WP_Query arguments
+    $args = array(
+        'post_type' => 'properties', // Your CPT slug
+        'posts_per_page' => -1,
+        'tax_query' => array('relation' => 'AND')
+    );
+    
+    // Add taxonomy filters
+    if (!empty($category)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'property_category',
+            'field' => 'slug',
+            'terms' => $category
+        );
+    }
+    
+    if (!empty($type)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'property_type',
+            'field' => 'slug',
+            'terms' => $type
+        );
+    }
+    
+    if (!empty($location)) {
+        $args['tax_query'][] = array(
+            'taxonomy' => 'property_location',
+            'field' => 'slug',
+            'terms' => $location
+        );
+    }
+    
+    // Execute query
+    $query = new WP_Query($args);
+    
+    // Build HTML response
+    $html = '';
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $html .= '<div class="property-item">';
+            $html .= '<h4>' . get_the_title() . '</h4>';
+            $html .= '<p>' . get_the_excerpt() . '</p>';
+            $html .= '</div>';
+        }
+        wp_reset_postdata();
+    } else {
+        $html = '<p>No properties found.</p>';
+    }
+    
+    wp_send_json_success(array('html' => $html));
+}
+
+add_action('wp_ajax_filter_properties', 'filter_properties_ajax');
+add_action('wp_ajax_nopriv_filter_properties', 'filter_properties_ajax');

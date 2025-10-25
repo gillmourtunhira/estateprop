@@ -15,7 +15,7 @@
 <body <?php body_class(); ?>>
     <header class="site-header">
         <!-- Navbar Structure -->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top custom-navbar">
+        <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
             <div class="container">
                 <!-- Brand/Logo -->
                 <a class="navbar-brand" href="<?php echo esc_url(
