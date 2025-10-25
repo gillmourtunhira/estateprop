@@ -1,0 +1,95 @@
+/**
+ * Import Bootstrap
+ */
+
+@use "sass:color";
+@use "../../node_modules/bootstrap/scss/bootstrap" as *;
+@use "variables" as vars;
+
+@use "layouts/header";
+@use "layouts/hero";
+@use "layouts/footer";
+@use "layouts/media_content";
+@use "layouts/accordion";
+@use "layouts/cards";
+@use "layouts/columns";
+@use "layouts/contact";
+@use "layouts/posts_cards";
+@use "layouts/testimonials";
+@use "layouts/stats";
+
+:root {
+    --dark: vars.$dark;
+    --primary-color: vars.$primary-color;
+    --header-height: vars.$header-height;
+}
+
+/**
+ * Custom styles
+ */
+*,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: vars.$font-family;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    overflow-x: hidden;
+    background-color: #f0f0f0;
+}
+
+.bg {
+    &-teal {
+        background-color: vars.$teal;
+    }
+}
+
+// Buttons
+.btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 0.5rem;
+
+    &-teal {
+        background-color: vars.$teal;
+
+        &:hover {
+            background-color: color.adjust(vars.$teal, $lightness: 10%);
+            color: initial;
+        }
+    }
+
+    &-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+    }
+
+    &-outline {
+        background-color: transparent;
+        color: var(--dark-blue);
+        border: 1px solid #d1d5db;
+        transition:
+            color 0.3s ease,
+            background-color 0.3s ease,
+            border-color 0.3s ease;
+
+        &:hover {
+            background-color: rgb(32 201 151 / 34%);
+            border-color: #20c997;
+        }
+    }
+}

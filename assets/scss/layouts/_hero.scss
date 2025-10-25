@@ -1,0 +1,151 @@
+@use "variables" as *;
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &__background {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    
+        video,
+        picture,
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    
+      &__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.75));
+        z-index: 1;
+      }
+    
+      .container {
+        position: relative;
+        z-index: 2;
+      }
+
+    &__inner {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    &__badge {
+        display: inline-block;
+        background: #fff;
+        color: #222;
+        padding: 0.4rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    &__title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+
+        strong {
+            color: #fff; // Can be adjusted with modifiers
+        }
+    }
+
+    &__subtitle {
+        font-size: 1.125rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    // ----- Size Modifiers -----
+    &.hero-full {
+        min-height: 100vh;
+    }
+
+    &.hero-half {
+        min-height: calc(50vh + #{$header-height});
+    }
+
+    // ----- Background Color Modifiers -----
+    &.hero--teal {
+        background-color: #009688;
+    }
+
+    &.hero--dark {
+        background-color: #111;
+    }
+
+    &.hero--light {
+        background-color: #f5f5f5;
+        color: #222;
+
+        .hero__badge {
+            background: #222;
+            color: #fff;
+        }
+    }
+
+    &-content{
+        display: grid;
+        row-gap: 2rem;
+        text-align: center;
+        max-width: 680px;
+        margin: 0 auto;
+
+        &-top{
+            h1,h2,h3{
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+
+// Example buttons (extendable)
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &--primary {
+        background: #111;
+        color: #fff;
+        border: none;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    &--outline {
+        border: 1px solid #fff;
+        color: #fff;
+        background: transparent;
+
+        &:hover {
+            background: #fff;
+            color: #111;
+        }
+    }
+}

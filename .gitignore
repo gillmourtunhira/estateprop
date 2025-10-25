@@ -1,0 +1,55 @@
+# Node.js dependencies
+/node_modules/
+
+# Gulp compiled assets
+/dist/
+
+# Logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.npm/
+.yarn-cache/
+.yarn/install-state.gz
+.yarnrc
+
+# macOS files
+.DS_Store
+
+# IDE-specific files (add your IDE if not listed)
+.idea/          # JetBrains IDEs (e.g., PhpStorm, WebStorm)
+.vscode/        # VS Code
+*.sublime-project
+*.sublime-workspace
+
+# WordPress specific files (common for local development)
+# These are generally not committed with themes
+wp-config.php
+wp-config-sample.php # If you have a copy
+.env
+.env.example
+.htaccess
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/ai1wm-backups/ # All-in-One WP Migration backups
+/wp-content/wflogs/ # Wordfence logs
+/wp-content/debug.log # WordPress debug log
+/wp-content/advanced-cache.php
+/wp-content/object-cache.php
+/wp-content/wp-rocket-config/ # WP Rocket config
+
+# Local development environment specific files
+.lando/         # Lando specific files
+.vagrant/       # Vagrant specific files
+.ddev/          # DDEV specific files
+
+# Composer
+/vendor/        # If you use Composer for PHP dependencies
+composer.lock
+
+# Other common ignored files
+*.log
+*.sql
+*.zip
+*.tar.gz

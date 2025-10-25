@@ -1,0 +1,297 @@
+// _variables.scss - Define your color scheme and breakpoints
+$primary-color: #20c997;
+$primary-hover: #1ba085;
+$text-color: #333;
+$text-muted: #666;
+$border-color: #dee2e6;
+$light-bg: #f8f9fa;
+$white: #fff;
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Bootstrap breakpoints
+$lg-breakpoint: 991.98px;
+
+// Spacing
+$navbar-padding: 1rem 0;
+$nav-link-margin: 0 0.5rem;
+$btn-padding: 0.5rem 1.5rem;
+$mobile-drawer-width: 280px;
+
+// Typography
+$brand-font-size: 1.5rem;
+$brand-font-weight: 600;
+$nav-font-weight: 500;
+
+// Mixins
+@mixin transition($property: all, $duration: 0.3s, $easing: ease) {
+    transition: $property $duration $easing;
+}
+
+@mixin button-hover($bg-color, $hover-color) {
+    background-color: $bg-color;
+    border-color: $bg-color;
+
+    &:hover {
+        background-color: $hover-color;
+        border-color: $hover-color;
+    }
+}
+
+// Main navbar styles
+body:not(.home){
+    .custom-navbar{
+        position: relative;
+        top: 0;
+    }
+}
+.custom-navbar {
+    background-color: $white;
+    box-shadow: $shadow-sm;
+    padding: $navbar-padding;
+
+    .navbar-brand {
+        font-weight: $brand-font-weight;
+        font-size: $brand-font-size;
+        color: $text-color !important;
+
+        img {
+            max-height: 40px;
+            width: auto;
+        }
+
+        &:hover {
+            color: $primary-color !important;
+        }
+    }
+
+    // Desktop navigation
+    .navbar-nav {
+        .nav-item {
+            .nav-link {
+                color: $text-muted !important;
+                font-weight: $nav-font-weight;
+                margin: $nav-link-margin;
+                @include transition(color);
+
+                &:hover,
+                &:focus {
+                    color: $primary-color !important;
+                }
+
+                // Active/current page styling
+                &.current-menu-item,
+                &.current_page_item {
+                    color: $primary-color !important;
+                    position: relative;
+
+                    /* &::after {
+                        content: "";
+                        position: absolute;
+                        bottom: -5px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 20px;
+                        height: 2px;
+                        background-color: $primary-color;
+                    } */
+                }
+            }
+
+            // Dropdown menu styling
+            &.dropdown {
+                .dropdown-menu {
+                    border: 1px solid $border-color;
+                    box-shadow: $shadow-sm;
+                    border-radius: 6px;
+
+                    .dropdown-item {
+                        color: $text-muted;
+                        @include transition(background-color);
+
+                        &:hover,
+                        &:focus {
+                            background-color: $light-bg;
+                            color: $primary-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // CTA Button
+    .btn-get-started {
+        @include button-hover($primary-color, $primary-hover);
+        padding: $btn-padding;
+        font-weight: $nav-font-weight;
+        border-radius: 6px;
+        @include transition();
+    }
+
+    // Mobile toggle button
+    .navbar-toggler {
+        border: none;
+        padding: 0.25rem 0.5rem;
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+    }
+}
+
+// Mobile side drawer styles
+.offcanvas {
+    width: $mobile-drawer-width !important;
+
+    .offcanvas-header {
+        border-bottom: 1px solid $border-color;
+
+        .offcanvas-title {
+            color: $text-color;
+            font-weight: $brand-font-weight;
+        }
+    }
+
+    .offcanvas-body {
+        .mobile-nav {
+            .nav-link {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid $light-bg;
+                color: $text-color !important;
+                font-weight: $nav-font-weight;
+                @include transition(background-color);
+                display: block;
+                text-decoration: none;
+
+                &:hover,
+                &:focus {
+                    background-color: $light-bg;
+                    color: $primary-color !important;
+                }
+
+                // Active/current page styling for mobile
+                &.current-menu-item,
+                &.current_page_item {
+                    background-color: rgba($primary-color, 0.1);
+                    color: $primary-color !important;
+                    border-left: 3px solid $primary-color;
+                }
+
+                i {
+                    width: 20px;
+                    text-align: center;
+                }
+            }
+        }
+
+        .mobile-get-started {
+            margin: 1rem;
+
+            .btn-get-started {
+                @include button-hover($primary-color, $primary-hover);
+                width: 100%;
+                font-weight: $nav-font-weight;
+
+                i {
+                    margin-right: 0.5rem;
+                }
+            }
+        }
+    }
+}
+
+// Responsive behavior
+@media (max-width: $lg-breakpoint) {
+    .custom-navbar {
+        .navbar-nav,
+        .d-none.d-lg-block {
+            display: none !important;
+        }
+    }
+}
+
+// Custom WordPress menu classes
+.menu-item-has-children {
+    position: relative;
+
+    > .nav-link::after {
+        content: "";
+        margin-left: 0.5rem;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-left: 0.3em solid transparent;
+    }
+}
+
+// Fix for WordPress admin bar
+.admin-bar .custom-navbar {
+    top: 32px;
+
+    @media screen and (max-width: 782px) {
+        top: 46px;
+    }
+}
+
+// Logo customization
+.custom-logo-link {
+    display: inline-block;
+
+    .custom-logo {
+        height: auto;
+        max-height: 40px;
+        width: auto;
+    }
+}
+
+// Accessibility improvements
+.navbar-toggler:focus,
+.btn-close:focus,
+.nav-link:focus,
+.btn-get-started:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+}
+
+// Animation for mobile drawer
+.offcanvas {
+    @include transition(transform, 0.3s, ease-in-out);
+}
+
+// Additional utility classes
+.navbar-spacer {
+    height: 80px; // Adjust based on your navbar height
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+    .custom-navbar {
+        background-color: #1a1a1a;
+
+        .navbar-brand,
+        .nav-link {
+            color: #fff !important;
+        }
+
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+    }
+
+    .offcanvas {
+        background-color: #1a1a1a;
+        color: #fff;
+
+        .offcanvas-header {
+            border-bottom-color: #333;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            border-bottom-color: #333 !important;
+        }
+    }
+}
