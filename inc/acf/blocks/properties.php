@@ -6,7 +6,7 @@
 
 return [
     "key" => "crafted_layout_properties_block",
-    "name" => "properties-block",
+    "name" => "properties",
     "label" => "Properties Block",
     "display" => "block",
 
@@ -19,15 +19,13 @@ return [
             "media_upload" => 0,
             "required" => 0,
         ],
-    ],
-
-    "location" => [
         [
-            [
-                "param" => "post_type",
-                "operator" => "==",
-                "value" => "properties",
-            ],
+            "key" => "crafted_layout_properties_number_of_properties",
+            "name" => "number_of_properties",
+            "label" => "Number of Properties",
+            "type" => "number",
+            "default_value" => 6,
+            "required" => 1,
         ],
     ],
 ];

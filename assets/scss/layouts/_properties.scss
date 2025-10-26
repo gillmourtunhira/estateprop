@@ -1,0 +1,202 @@
+.properties-filter-cta {
+    position: absolute;
+    bottom: 235px;
+    left: 0;
+    right: 0;
+    max-width: 815px;
+    margin: 0 auto;
+    .filter-box {
+        border-radius: 12px;
+        padding: 40px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .filter-box .form-select {
+        border-radius: 8px;
+        padding: 10px 14px;
+        min-width: 160px;
+    }
+
+    .filter-box .btn-icon {
+        border-radius: 8px;
+        height: 48px;
+        width: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .filter-box .btn-primary {
+        border-radius: 8px;
+        height: 48px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+
+    .filter-box select:focus,
+    .filter-box .btn:focus {
+        box-shadow: none;
+    }
+
+    /* ===== Responsive Adjustments ===== */
+
+    /* Tablets (≤991px) */
+    @media (max-width: 991.98px) {
+        .filter-box {
+            gap: 10px;
+        }
+
+        .filter-box .form-select {
+            flex: 1 1 45%;
+        }
+
+        .filter-box .btn-icon,
+        .filter-box .btn-primary {
+            flex: 1 1 45%;
+        }
+    }
+
+    /* Mobile (≤575px) */
+    @media (max-width: 575.98px) {
+        .filter-box {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-box .form-select,
+        .filter-box .btn-icon,
+        .filter-box .btn-primary {
+            width: 100%;
+        }
+
+        .filter-box .btn-icon {
+            order: 3; /* optional: place it below selects */
+        }
+
+        .filter-box .btn-primary {
+            order: 4;
+        }
+    }
+}
+
+// Single Property Page Styles
+.single-property {
+    .property-header .badge {
+        font-size: 0.875rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 6px;
+    }
+
+    .property-title {
+        font-weight: 700;
+        color: #1a1a3d;
+    }
+
+    .property-gallery .main-image img,
+    .property-gallery .small-image img,
+    .property-gallery .small-map img {
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .property-gallery .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        font-size: 0.9rem;
+        text-align: center;
+        border-radius: 12px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .property-gallery .small-image:hover .overlay {
+        opacity: 1;
+    }
+
+    .property-description h4,
+    .property-details h4 {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #1a1a3d;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: background 0.2s;
+    }
+
+    .detail-item:hover {
+        background: #eef2f7;
+    }
+
+    .detail-item i {
+        font-size: 1.25rem;
+        color: #0056d2;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-item span {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .detail-item strong {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    /* ===== Contact Agent ===== */
+    .contact-agent {
+        .agent-info {
+            img {
+                /* border-radius: 50%; */
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                /* margin-right: 1rem; */
+            }
+        }
+    }
+    .contact-agent h5 {
+        font-weight: 700;
+    }
+
+    .contact-agent .form-control {
+        border-radius: 8px;
+        border: none;
+        padding: 0.75rem;
+    }
+
+    .contact-agent .form-control:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    .contact-agent .btn-primary {
+        background: #0056d2;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-weight: 600;
+    }
+}
