@@ -234,9 +234,6 @@ return [
             "role" => [
                 "administrator",
                 "editor",
-                "author",
-                "contributor",
-                "subscriber",
                 "agent",
             ],
             "return_format" => "array",

@@ -1,20 +1,42 @@
 <?php
+$post_id = get_the_ID();
+
+// ACF Fields
 $description_content = get_sub_field('description_content');
+$suburb_address = get_sub_field('suburb_address');
+$price = get_sub_field('price');
+$agent_info = get_sub_field('agent_info');
+
+$agent_fullname = '';
+if ($agent_info) {
+    $agent_fullname = $agent_info['user_firstname'] . ' ' . $agent_info['user_lastname'];
+}
+
+// Taxonomies
+$property_category = get_the_terms($post_id, 'property_category');
+$status = '';
+if ($property_category && !is_wp_error($property_category)) {
+    $status = $property_category[0]->name;
+}
+$property_type = get_the_terms($post_id, 'property_type');
+$property_location = get_the_terms($post_id, 'property_location');
+
+// Meta Data
+$post_author_id = get_post_field('post_author', $post_id);
+$author_name = get_the_author_meta('display_name', $post_author_id);
 ?>
 <section class="single-property py-5">
     <div class="container">
         <div class="row align-items-start">
-
             <!-- Left: Main content -->
             <div class="col-lg-8">
-
                 <!-- Property Header -->
                 <div class="property-header mb-4">
-                    <span class="badge bg-success">For Sale</span>
-                    <h1 class="property-title mt-2">Amazing modern apartment</h1>
-                    <p class="property-location text-muted mb-2">43 W. Wellington Road Fairhope, AL 36532</p>
+                    <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : 'success'; ?>"><?php echo $status; ?></span>
+                    <h1 class="property-title mt-2"><?php the_title(); ?></h1>
+                    <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
                     <div class="property-price fw-bold fs-4 text-dark">
-                        $120,000 <span class="text-muted fs-6">/ $1200 per sq.ft</span>
+                        $<?php format_large_number($price); ?> <span class="text-muted fs-6">/ $1200 per sq.ft</span>
                     </div>
                 </div>
 
@@ -23,7 +45,12 @@ $description_content = get_sub_field('description_content');
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="main-image rounded-4 overflow-hidden">
-                                <img src="https://picsum.photos/id/20/800/400" class="img-fluid w-100" alt="Main property image">
+                                <?php
+                                $post_thumbnail_id = get_post_thumbnail_id($post_id);
+                                if ($post_thumbnail_id) : ?>
+                                    <img src="<?php echo esc_url(wp_get_attachment_image_url($post_thumbnail_id, 'large')); ?>" class="img-fluid w-100" alt="Main property image">
+                                <?php endif;
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -31,9 +58,13 @@ $description_content = get_sub_field('description_content');
 
                 <!-- Description -->
                 <div class="property-description mb-5">
-                    <h4>Description</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur. Morbi quis habitant donec aliquet interdum...</p>
-                    <p>Ut pellentesque lectus auctor aenean urna. Lectus vestibulum sit et cursus...</p>
+                    <?php
+                    if ($description_content) : ?>
+                        <h4>Description</h4>
+                        <div class="description-content mt-3">
+                            <?php echo wp_kses_post($description_content); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Property Details -->
@@ -98,7 +129,7 @@ $description_content = get_sub_field('description_content');
                             <img src="https://picsum.photos/id/1005/100/100" class="img-fluid w-100" alt="Agent photo">
                         </div>
                         <div>
-                            <strong>Emilia Buck</strong><br>
+                            <strong><?php echo ($agent_fullname) ? $agent_fullname : $author_name; ?></strong><br>
                             <small>(431) 402-2459</small><br>
                             <small class="text-white">rsamartin@optonline.net</small>
                         </div>

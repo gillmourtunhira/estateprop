@@ -121,3 +121,11 @@ function add_agent_role_and_capabilities()
     }
 }
 add_action('init', 'add_agent_role_and_capabilities');
+
+// Function to put a decimal point in large numbers
+// E.g., 1000000 becomes 1.000.000
+// Usage: echo format_large_number(1000000); // Outputs: 1.000.000
+function format_large_number($number)
+{
+    echo number_format($number, 0, '', ',');
+}
