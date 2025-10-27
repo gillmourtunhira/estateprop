@@ -72,36 +72,54 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                 <div class="property-details">
                     <h4>Property details</h4>
                     <div class="details-grid mt-3">
-                        <div class="detail-item">
-                            <i class="fa-solid fa-ruler-combined"></i>
-                            <span>Total area</span>
-                            <strong>100 sq.ft</strong>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fa-solid fa-bed"></i>
-                            <span>Bedrooms</span>
-                            <strong>2</strong>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fa-solid fa-bath"></i>
-                            <span>Bathrooms</span>
-                            <strong>2</strong>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fa-solid fa-layer-group"></i>
-                            <span>Floor</span>
-                            <strong>3rd</strong>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fa-solid fa-elevator"></i>
-                            <span>Elevator</span>
-                            <strong>Yes</strong>
-                        </div>
-                        <div class="detail-item">
-                            <i class="fa-solid fa-square-parking"></i>
-                            <span>Parking</span>
-                            <strong>2</strong>
-                        </div>
+
+                        <?php
+                        if (have_rows('property_details')) :
+                            while (have_rows('property_details')) : the_row();
+                                $total_area = get_sub_field('total_area_detail');
+                                $bedrooms = get_sub_field('bedrooms_detail');
+                                $bathrooms = get_sub_field('bathrooms_detail');
+                                $floor = get_sub_field('floor_detail');
+                                $garages = get_sub_field('garages_detail');
+                                $parking = get_sub_field('parking_detail');
+                                $construction_year = get_sub_field('construction_year_detail');
+                                $wifi = get_sub_field('wifi_detail');
+                                $cable_tv = get_sub_field('cable_tv_detail');
+                        ?>
+                                <!--You can loop through sub-fields here if needed-->
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-ruler-combined"></i>
+                                    <span>Total area</span>
+                                    <strong><?php echo esc_attr($total_area); ?> sq.m</strong>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-bed"></i>
+                                    <span>Bedrooms</span>
+                                    <strong><?php echo esc_attr($bedrooms); ?></strong>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-bath"></i>
+                                    <span>Bathrooms</span>
+                                    <strong><?php echo esc_attr($bathrooms); ?></strong>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <span>Floor</span>
+                                    <strong><?php echo esc_attr($floor); ?></strong>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-elevator"></i>
+                                    <span>Elevator</span>
+                                    <strong>Yes</strong>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fa-solid fa-square-parking"></i>
+                                    <span>Parking</span>
+                                    <strong>2</strong>
+                                </div>
+                        <?php endwhile;
+                        endif;
+                        ?>
                     </div>
                 </div>
 
@@ -111,19 +129,57 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
             <div class="col-lg-4">
                 <div class="col-12">
                     <div class="small-image rounded-4 overflow-hidden position-relative">
-                        <img src="https://picsum.photos/id/42/400/200" class="img-fluid w-100" alt="Show all photos">
-                        <div class="overlay d-flex flex-column align-items-center justify-content-center">
+                        <img src="<?php echo esc_url(wp_get_attachment_image_url($post_thumbnail_id, 'large')); ?>" class="img-fluid w-100" alt="Show all photos">
+
+                        <div class="overlay d-flex flex-column align-items-center justify-content-center" id="open-gallery">
+                            <?php
+                            $gallery = get_sub_field('gallery');
+                            $image_count = ($gallery) ? count($gallery) : 0;
+                            ?>
                             <i class="fa-solid fa-camera mb-1"></i>
-                            <span>Show all<br><strong>12 photos</strong></span>
+                            <h3 class="fw-bold mb-0">See all</h3>
+                            <span><?php echo $image_count; ?> Photos</span>
                         </div>
                     </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade property-gallery" id="property-gallery" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content bg-dark text-white border-0">
+                                <div class="modal-body p-0 position-relative">
+                                    <button type="button" class="btn-close btn-close-white position-absolute end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                                    <div id="propertyGalleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            <?php if ($gallery): $i = 0;
+                                                foreach ($gallery as $image): ?>
+                                                    <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
+                                                        <img src="<?php echo esc_url($image['url']); ?>" class="d-block w-100" alt="Property Image">
+                                                    </div>
+                                            <?php $i++;
+                                                endforeach;
+                                            endif; ?>
+                                        </div>
+
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#propertyGalleryCarousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon"></span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#propertyGalleryCarousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="col-12 my-4">
+                <div class="col-12 my-4 d-none">
                     <div class="small-map rounded-4 overflow-hidden">
                         <img src="https://picsum.photos/id/57/400/200?text=Map" class="img-fluid w-100" alt="Map preview">
                     </div>
                 </div>
-                <div class="contact-agent bg-dark text-white p-4 rounded-4">
+                <div class="contact-agent bg-dark text-white p-4 rounded-4 d-none">
                     <h5 class="mb-4">Contact agent</h5>
                     <div class="agent-info d-flex align-items-center mb-4">
                         <div class="agent-photo rounded-circle overflow-hidden me-3" style="width: 60px; height: 60px;">

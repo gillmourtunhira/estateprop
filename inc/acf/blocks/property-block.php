@@ -40,6 +40,16 @@ return [
             ],
         ],
         [
+            "key" => "crafted_layout_property_gallery",
+            "name" => "gallery",
+            "label" => "Gallery",
+            "type" => "gallery",
+            "required" => 0,
+            "wrapper" => [
+                "width" => "100",
+            ],
+        ],
+        [
             "key" => "crafted_layout_property_details",
             "name" => "property_details",
             "label" => "Property Details",
@@ -50,16 +60,6 @@ return [
             "layout" => "block",
             "button_label" => "Add Details",
             "sub_fields" => [
-                [
-                    "key" => "crafted_layout_property_gallery",
-                    "name" => "gallery",
-                    "label" => "Gallery",
-                    "type" => "gallery",
-                    "required" => 0,
-                    "wrapper" => [
-                        "width" => "100",
-                    ],
-                ],
                 [
                     "key" => "crafted_layout_property_total_area_detail",
                     "name" => "total_area_detail",
