@@ -1,5 +1,6 @@
 <?php
 $post_id = get_the_ID();
+$user_id = get_the_author_meta('ID');
 
 // ACF Fields
 $description_content = get_sub_field('description_content');
@@ -32,7 +33,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
             <div class="col-lg-8">
                 <!-- Property Header -->
                 <div class="property-header mb-4">
-                    <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : 'success'; ?>"><?php echo $status; ?></span>
+                    <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : (($status === 'For Sale') ? 'success' : 'primary'); ?>"><?php echo $status; ?></span>
                     <h1 class="property-title mt-2"><?php the_title(); ?></h1>
                     <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
                     <div class="property-price fw-bold fs-4 text-dark">
@@ -126,12 +127,24 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                     <h5 class="mb-4">Contact agent</h5>
                     <div class="agent-info d-flex align-items-center mb-4">
                         <div class="agent-photo rounded-circle overflow-hidden me-3" style="width: 60px; height: 60px;">
-                            <img src="https://picsum.photos/id/1005/100/100" class="img-fluid w-100" alt="Agent photo">
+                            <?php
+                            $agent_photo_url = '';
+                            $agent_photo = get_user_meta($agent_info['ID'], 'agent_photo', true);
+                            $photo = wp_get_attachment_image_src($agent_photo, 'thumbnail');
+                            if ($photo) {
+                                $agent_photo_url = $photo[0];
+                            } else {
+                                $agent_photo_url = get_avatar_url($agent_info['ID']);
+                            }
+                            ?>
+                            <img src="<?php echo esc_url($agent_photo_url); ?>" class="img-fluid w-100" alt="Agent photo">
                         </div>
                         <div>
                             <strong><?php echo ($agent_fullname) ? $agent_fullname : $author_name; ?></strong><br>
-                            <small>(431) 402-2459</small><br>
-                            <small class="text-white">rsamartin@optonline.net</small>
+                            <small><?php echo get_user_meta($agent_info['ID'], 'agent_phone', true); ?></small><br>
+                            <small class="text-white">
+                                <?php echo ($agent_info) ? $agent_info['user_email'] : get_user_meta($agent_info['ID'], 'agent_contact_email', true); ?>
+                            </small>
                         </div>
                     </div>
 
