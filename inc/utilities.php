@@ -129,3 +129,70 @@ function format_large_number($number)
 {
     echo number_format($number, 0, '', ',');
 }
+
+/**
+ * Properties REST API Endpoint
+ * Registers a custom REST API endpoint to fetch featured properties.
+ */
+function register_properties_rest_route()
+{
+    $args = array(
+        'methods' => 'GET',
+        'callback' => 'get_properties_data',
+        'permission_callback' => '__return_true',
+        'sanitize_callback' => null,
+    );
+
+    register_rest_route('properties/v1', '/featured', $args);
+}
+add_action('rest_api_init', 'register_properties_rest_route');
+
+/**
+ * Callback function to fetch featured properties data.
+ *
+ * @param WP_REST_Request $request The REST request object.
+ * @return WP_REST_Response The response containing featured properties data.
+ */
+function get_properties_data($request)
+{
+    delete_transient('featured_properties_data');
+
+    $cache_key = 'featured_properties_data';
+    $cache_time = 5 * MINUTE_IN_SECONDS; // Store data in transient for 5 minutes
+
+    $properties = get_transient($cache_key); // Retrieve cached data
+
+    // Check for cached data
+    if ($properties !== false) {
+        return rest_ensure_response($properties);
+    }
+
+    if ($properties === false) {
+        $args = array(
+            'post_type' => 'properties',
+            'posts_per_page' => 5,
+            'post_status' => 'publish',
+        );
+
+        $query = new WP_Query($args);
+        $properties_ids = $query->posts;
+
+        $properties = array();
+
+        if (!empty($properties_ids)) {
+            foreach ($properties_ids as $property_id) {
+                $properties[] = array(
+                    'id' => $property_id->ID,
+                    'title' => get_the_title($property_id->ID),
+                    'image' => get_the_post_thumbnail_url($property_id->ID, 'medium'),
+                    // 'permalink' => get_permalink($property_id->ID),
+                    // 'price' => get_post_meta($property_id->ID, 'property_price', true),
+                    // 'location' => get_post_meta($property_id->ID, 'property_location', true),
+                );
+            }
+        }
+
+        set_transient($cache_key, $properties, $cache_time);
+    }
+    return rest_ensure_response($properties);
+}
