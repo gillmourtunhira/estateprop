@@ -155,44 +155,61 @@ add_action('rest_api_init', 'register_properties_rest_route');
  */
 function get_properties_data($request)
 {
-    delete_transient('featured_properties_data');
-
     $cache_key = 'featured_properties_data';
-    $cache_time = 5 * MINUTE_IN_SECONDS; // Store data in transient for 5 minutes
+    $cache_time = 5 * MINUTE_IN_SECONDS;
+    $properties = get_transient($cache_key);
 
-    $properties = get_transient($cache_key); // Retrieve cached data
-
-    // Check for cached data
     if ($properties !== false) {
         return rest_ensure_response($properties);
     }
 
-    if ($properties === false) {
-        $args = array(
-            'post_type' => 'properties',
-            'posts_per_page' => 5,
-            'post_status' => 'publish',
-        );
+    $args = array(
+        'post_type' => 'properties',
+        'posts_per_page' => 5,
+        'post_status' => 'publish',
+    );
 
-        $query = new WP_Query($args);
-        $properties_ids = $query->posts;
+    $query = new WP_Query($args);
+    $properties_ids = $query->posts;
+    $properties = array();
 
-        $properties = array();
+    if (!empty($properties_ids)) {
+        foreach ($properties_ids as $property_id) {
+            // Get the flexible content field
+            $layouts = get_field('flexible_content', $property_id->ID);
 
-        if (!empty($properties_ids)) {
-            foreach ($properties_ids as $property_id) {
-                $properties[] = array(
-                    'id' => $property_id->ID,
-                    'title' => get_the_title($property_id->ID),
-                    'image' => get_the_post_thumbnail_url($property_id->ID, 'medium'),
-                    // 'permalink' => get_permalink($property_id->ID),
-                    // 'price' => get_post_meta($property_id->ID, 'property_price', true),
-                    // 'location' => get_post_meta($property_id->ID, 'property_location', true),
-                );
+            $property_data = array(
+                'id' => $property_id->ID,
+                'title' => get_the_title($property_id->ID),
+                'image' => get_the_post_thumbnail_url($property_id->ID, 'medium'),
+                'permalink' => get_permalink($property_id->ID),
+            );
+
+            // Loop through layouts to find the property-block
+            if ($layouts) {
+                foreach ($layouts as $layout) {
+                    if ($layout['acf_fc_layout'] === 'property-block') {
+                        $property_data['price'] = $layout['price'] ?? null;
+                        $property_data['suburb'] = $layout['suburb_address'] ?? null;
+                        $property_data['gallery'] = $layout['gallery'] ?? null;
+                        $property_data['description'] = !empty($layout['description_content'])
+                            ? strip_tags($layout['description_content'])
+                            : null;
+                        $property_data['property_details'] = $layout['property_details'] ?? null;
+                        $property_data['map_longitude'] = $layout['map_longitude'] ?? null;
+                        $property_data['map_latitude'] = $layout['map_latitude'] ?? null;
+                        $property_data['google_map'] = $layout['google_map'] ?? null;
+                        $property_data['agent_info'] = $layout['agent_info'] ?? null;
+                        break; // Found the property block, no need to continue
+                    }
+                }
             }
-        }
 
-        set_transient($cache_key, $properties, $cache_time);
+            $properties[] = $property_data;
+        }
     }
+
+    set_transient($cache_key, $properties, $cache_time);
+
     return rest_ensure_response($properties);
 }

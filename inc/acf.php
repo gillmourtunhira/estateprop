@@ -109,5 +109,6 @@ function add_agent_user_fields()
         ],
         'position' => 'normal',
         'style' => 'default',
+        'show_in_rest' => 1,
     ]);
 }

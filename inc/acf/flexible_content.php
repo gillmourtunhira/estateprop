@@ -91,5 +91,5 @@ acf_add_local_field_group([
     ),
     'active' => true,
     'description' => '',
-    'show_in_rest' => 0,
+    'show_in_rest' => 1,
 ]);

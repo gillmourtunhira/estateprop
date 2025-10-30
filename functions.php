@@ -192,4 +192,26 @@ add_action("pre_get_posts", function ($query) {
     }
 });
 
-//
+/**
+ * Get fields from ACF block saved in post content
+ */
+function get_acf_block_data($post_id, $block_name = 'acf/property-block')
+{
+    $content = get_post_field('post_content', $post_id);
+
+    if (empty($content)) return [];
+
+    $blocks = parse_blocks($content);
+
+    foreach ($blocks as $block) {
+        if (
+            !empty($block['blockName']) &&
+            $block['blockName'] === $block_name &&
+            !empty($block['attrs']['data'])
+        ) {
+            return $block['attrs']['data'];
+        }
+    }
+
+    return [];
+}
