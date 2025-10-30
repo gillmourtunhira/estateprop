@@ -8,6 +8,7 @@ require_once get_template_directory() . "/inc/classes/Bootstrap_Helper.php";
 require_once get_template_directory() . "/inc/classes/class-shortcodes.php";
 require_once get_template_directory() . "/inc/utilities.php";
 require_once get_template_directory() . "/inc/post-types.php";
+require_once get_template_directory() . "/inc/theme-options.php";
 
 new CraftedTheme_Shortcodes();
 

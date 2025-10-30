@@ -127,7 +127,16 @@ add_action('init', 'add_agent_role_and_capabilities');
 // Usage: echo format_large_number(1000000); // Outputs: 1.000.000
 function format_large_number($number)
 {
-    echo number_format($number, 0, '', ',');
+    return number_format($number, 0, '', ',');
+}
+
+// Calculate the price per square meter
+function calculate_price_per_sqm($price_total, $area)
+{
+    if ($area > 0) {
+        return round($price_total / $area);
+    }
+    return 0;
 }
 
 /**
@@ -196,9 +205,9 @@ function get_properties_data($request)
                             ? strip_tags($layout['description_content'])
                             : null;
                         $property_data['property_details'] = $layout['property_details'] ?? null;
-                        $property_data['map_longitude'] = $layout['map_longitude'] ?? null;
-                        $property_data['map_latitude'] = $layout['map_latitude'] ?? null;
-                        $property_data['google_map'] = $layout['google_map'] ?? null;
+                        // $property_data['map_longitude'] = $layout['map_longitude'] ?? null;
+                        // $property_data['map_latitude'] = $layout['map_latitude'] ?? null;
+                        // $property_data['google_map'] = $layout['google_map'] ?? null;
                         $property_data['agent_info'] = $layout['agent_info'] ?? null;
                         break; // Found the property block, no need to continue
                     }

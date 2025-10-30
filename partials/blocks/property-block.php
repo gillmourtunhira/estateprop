@@ -7,6 +7,15 @@ $description_content = get_sub_field('description_content');
 $suburb_address = get_sub_field('suburb_address');
 $price = get_sub_field('price');
 $agent_info = get_sub_field('agent_info');
+$property_details = get_sub_field('property_details');
+// Get the total area from property details repeater field
+$total_area = '';
+if ($property_details && is_array($property_details)) {
+    $first_row = $property_details[0];
+    if (isset($first_row['total_area_detail'])) {
+        $total_area = $first_row['total_area_detail'];
+    }
+}
 
 $agent_fullname = '';
 if ($agent_info) {
@@ -33,11 +42,13 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
             <div class="col-lg-8">
                 <!-- Property Header -->
                 <div class="property-header mb-4">
+                    <?php // var_dump($price);
+                    ?>
                     <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : (($status === 'For Sale') ? 'success' : 'primary'); ?>"><?php echo $status; ?></span>
                     <h1 class="property-title mt-2"><?php the_title(); ?></h1>
                     <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
                     <div class="property-price fw-bold fs-4 text-dark">
-                        $<?php format_large_number($price); ?> <span class="text-muted fs-6">/ $1200 per sq.ft</span>
+                        $<?php echo format_large_number($price); ?> <span class="text-muted fs-6">/ $<?php echo calculate_price_per_sqm(intval($price), intval($total_area)); ?> per sq.m</span>
                     </div>
                 </div>
 
@@ -55,17 +66,6 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Description -->
-                <div class="property-description mb-5">
-                    <?php
-                    if ($description_content) : ?>
-                        <h4>Description</h4>
-                        <div class="description-content mt-3">
-                            <?php echo wp_kses_post($description_content); ?>
-                        </div>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Property Details -->
@@ -88,39 +88,108 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         ?>
                                 <!--You can loop through sub-fields here if needed-->
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-ruler-combined"></i>
-                                    <span>Total area</span>
-                                    <strong><?php echo esc_attr($total_area); ?> sq.m</strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-ruler-combined"></i>
+                                        <span>Total area</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($total_area); ?> sqm</strong>
+                                    </div>
                                 </div>
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-bed"></i>
-                                    <span>Bedrooms</span>
-                                    <strong><?php echo esc_attr($bedrooms); ?></strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-bed"></i>
+                                        <span>Bedrooms</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($bedrooms); ?></strong>
+                                    </div>
                                 </div>
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-bath"></i>
-                                    <span>Bathrooms</span>
-                                    <strong><?php echo esc_attr($bathrooms); ?></strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-bath"></i>
+                                        <span>Bathrooms</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($bathrooms); ?></strong>
+                                    </div>
                                 </div>
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-layer-group"></i>
-                                    <span>Floor</span>
-                                    <strong><?php echo esc_attr($floor); ?></strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <span>Floor</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($floor); ?></strong>
+                                    </div>
                                 </div>
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-elevator"></i>
-                                    <span>Elevator</span>
-                                    <strong>Yes</strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-square-parking"></i>
+                                        <span>Parking</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php
+                                                echo (is_bool($parking) ? 'Yes' : 'No');
+                                                ?>
+                                        </strong>
+                                    </div>
                                 </div>
                                 <div class="detail-item">
-                                    <i class="fa-solid fa-square-parking"></i>
-                                    <span>Parking</span>
-                                    <strong>2</strong>
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-warehouse"></i>
+                                        <span>Garages</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($garages); ?></strong>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-calendar-alt"></i>
+                                        <span>Construction Year</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php echo esc_attr($construction_year); ?></strong>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-wifi"></i>
+                                        <span>Wi-Fi</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php
+                                                echo (is_bool($wifi) ? 'Yes' : 'No');
+                                                ?></strong>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="icon-label-wrapper">
+                                        <i class="fa-solid fa-tv"></i>
+                                        <span>Cable TV</span>
+                                    </div>
+                                    <div>
+                                        <strong><?php
+                                                echo (is_bool($cable_tv) ? 'Yes' : 'No');
+                                                ?></strong>
+                                    </div>
                                 </div>
                         <?php endwhile;
                         endif;
                         ?>
                     </div>
+                </div>
+
+                <!-- Description -->
+                <div class="property-description mt-5">
+                    <?php
+                    if ($description_content) : ?>
+                        <h4>Description</h4>
+                        <div class="description-content mt-3">
+                            <?php echo wp_kses_post($description_content); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
             </div>
@@ -179,7 +248,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         <img src="https://picsum.photos/id/57/400/200?text=Map" class="img-fluid w-100" alt="Map preview">
                     </div>
                 </div>
-                <div class="contact-agent bg-dark text-white p-4 rounded-4 d-none">
+                <div class="contact-agent bg-dark text-white my-4 p-4 rounded-4">
                     <h5 class="mb-4">Contact agent</h5>
                     <div class="agent-info d-flex align-items-center mb-4">
                         <div class="agent-photo rounded-circle overflow-hidden me-3" style="width: 60px; height: 60px;">

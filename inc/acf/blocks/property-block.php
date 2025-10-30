@@ -44,7 +44,9 @@ return [
             "name" => "gallery",
             "label" => "Gallery",
             "type" => "gallery",
-            "required" => 0,
+            "required" => 1,
+            "min" => 1, // Minimum 1 image
+            "max" => 10, // Maximum 10 images
             "wrapper" => [
                 "width" => "100",
             ],

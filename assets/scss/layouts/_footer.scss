@@ -1,51 +1,278 @@
-/* Footer */
-.footer {
-    background-color: #111827;
-    color: white;
-    padding: 3rem 0;
+// _footer.scss
+
+// Variables
+$footer-bg: #0a0e27;
+$footer-text: #ffffff;
+$footer-text-muted: rgba(255, 255, 255, 0.7);
+$footer-link-hover: #4a90e2;
+$footer-border: rgba(255, 255, 255, 0.1);
+$primary-color: #4a90e2;
+
+.site-footer {
+    background-color: $footer-bg;
+    color: $footer-text;
+    padding: 60px 0 0;
+
+    // Footer Heading
+    .footer-heading {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: $footer-text;
+    }
+
+    // Opening Hours
+    .footer-hours {
+        margin-bottom: 0.5rem;
+        font-size: 0.938rem;
+        color: $footer-text-muted;
+        line-height: 1.6;
+    }
+
+    // Address & Contact
+    .footer-address,
+    .footer-contact {
+        font-size: 0.938rem;
+        color: $footer-text-muted;
+        margin-bottom: 0.5rem;
+        line-height: 1.6;
+
+        a {
+            color: $footer-text-muted;
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: $footer-text;
+            }
+        }
+    }
+
+    // Footer Links
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 0.75rem;
+
+            a {
+                color: $footer-text-muted;
+                text-decoration: none;
+                font-size: 0.938rem;
+                transition: color 0.3s ease;
+                display: inline-block;
+
+                &:hover {
+                    color: $footer-text;
+                    transform: translateX(3px);
+                }
+            }
+        }
+    }
+
+    // Newsletter Section
+    .newsletter-text {
+        font-size: 0.938rem;
+        color: $footer-text-muted;
+        margin-bottom: 1rem;
+    }
+
+    .newsletter-form-default {
+        .input-group {
+            flex-direction: column;
+            gap: 0.5rem;
+            .form-control {
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: $footer-text;
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+                border-radius: 4px !important;
+                width: 100%;
+
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.15);
+                    border-color: $primary-color;
+                    color: $footer-text;
+                    box-shadow: none;
+                }
+            }
+
+            .btn-primary {
+                background-color: $primary-color;
+                border: none;
+                padding: 0.625rem 1.25rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                border-radius: 4px !important;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: darken($primary-color, 10%);
+                }
+            }
+        }
+    }
+
+    // Custom newsletter form styling (for Contact Form 7 or other plugins)
+    .newsletter-form {
+        .wpcf7-form {
+            .wpcf7-form-control-wrap {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            input[type="email"] {
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: $footer-text;
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+                border-radius: 4px;
+
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.15);
+                    border-color: $primary-color;
+                    outline: none;
+                }
+            }
+
+            input[type="submit"] {
+                width: 100%;
+                background-color: $primary-color;
+                border: none;
+                padding: 0.625rem 1.25rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                border-radius: 4px !important;
+                color: $footer-text;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: darken($primary-color, 10%);
+                }
+            }
+        }
+    }
+
+    // Footer Bottom
+    .footer-bottom {
+        margin-top: 3rem;
+        padding: 1.5rem 0;
+        border-top: 1px solid $footer-border;
+
+        .copyright {
+            font-size: 0.875rem;
+            color: $footer-text-muted;
+        }
+
+        // Social Icons
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+
+            a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                color: $footer-text;
+                text-decoration: none;
+                transition: all 0.3s ease;
+
+                i {
+                    font-size: 0.875rem;
+                }
+
+                &:hover {
+                    background-color: $primary-color;
+                    transform: translateY(-3px);
+                }
+            }
+        }
+    }
 }
 
-.footer-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 2rem;
+// Responsive Styles
+@media (max-width: 991.98px) {
+    .site-footer {
+        padding: 40px 0 0;
+
+        .footer-heading {
+            margin-bottom: 1rem;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+
+            .copyright {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+    }
 }
 
-.footer-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+@media (max-width: 767.98px) {
+    .site-footer {
+        padding: 30px 0 0;
+
+        .footer-heading {
+            font-size: 1rem;
+        }
+
+        .col-md-6,
+        .col-lg-3,
+        .col-lg-2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bottom {
+            padding: 1rem 0;
+
+            .row {
+                flex-direction: column;
+            }
+        }
+    }
 }
 
-.footer-description {
-    color: #9ca3af;
-    margin-bottom: 1rem;
-}
+@media (max-width: 575.98px) {
+    .site-footer {
+        .newsletter-form-default {
+            .input-group {
+                flex-direction: column;
 
-.footer-copyright {
-    color: #9ca3af;
-}
+                .form-control {
+                    border-radius: 4px;
+                    margin-bottom: 0.5rem;
+                }
 
-.footer-heading {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.footer-list {
-    list-style: none;
-}
-
-.footer-list li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-list a {
-    color: #9ca3af;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-list a:hover {
-    color: white;
+                .btn-primary {
+                    width: 100%;
+                    border-radius: 4px;
+                }
+            }
+        }
+    }
 }
