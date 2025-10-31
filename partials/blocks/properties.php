@@ -1,3 +1,6 @@
+<?php
+$top_content = get_sub_field('top_content');
+?>
 <section class="properties-grid my-5">
     <!-- Properties Filter -->
     <div class="properties-filter-cta">
@@ -70,8 +73,17 @@
     </div>
     <!-- Properties Filter-->
     <div class="container">
-        <div class="content py-5">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum quaerat saepe quod ut laboriosam! Delectus voluptatibus quaerat fuga laudantium fugiat in nulla, accusamus eaque magnam saepe quibusdam natus sunt temporibus.
+        <div class="content py-4 text-center">
+            <?php
+            if ($top_content) {
+                echo wp_kses_post(wpautop($top_content));
+            }
+            ?>
+        </div>
+        <div class="properties-grid__container">
+            <?php
+            echo do_shortcode('[properties_cards]');
+            ?>
         </div>
     </div>
 </section>
