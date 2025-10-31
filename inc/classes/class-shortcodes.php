@@ -170,23 +170,31 @@ class CraftedTheme_Shortcodes
 
                         <div class="property-features">
                             <div class="feature text-dark">
-                                <i class="fa-solid fa-bed" aria-hidden="true"></i>
-                                <span><?php echo esc_html($bedrooms); ?></span>
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                                    <span><?php echo esc_html($bedrooms); ?></span>
+                                </div>
                                 <small>Bedrooms</small>
                             </div>
                             <div class="feature text-dark">
-                                <i class="fa-solid fa-bath" aria-hidden="true"></i>
-                                <span><?php echo esc_html($bathrooms); ?></span>
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-bath" aria-hidden="true"></i>
+                                    <span><?php echo esc_html($bathrooms); ?></span>
+                                </div>
                                 <small>Bathrooms</small>
                             </div>
                             <div class="feature text-dark">
-                                <i class="fa-regular fa-square" aria-hidden="true"></i>
-                                <span><?php echo esc_html($area); ?></span>
+                                <div class="feature-icon-detail">
+                                    <i class="fa-regular fa-square" aria-hidden="true"></i>
+                                    <span><?php echo esc_html($area); ?></span>
+                                </div>
                                 <small>Total area</small>
                             </div>
                             <div class="feature text-dark">
-                                <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
-                                <span><?php echo esc_html($garages); ?></span>
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+                                    <span><?php echo esc_html($garages); ?></span>
+                                </div>
                                 <small>Garages</small>
                             </div>
                         </div>

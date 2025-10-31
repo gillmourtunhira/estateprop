@@ -361,6 +361,11 @@
                     font-size: 0.75rem;
                     color: #777;
                 }
+
+                &-icon-detail {
+                    display: flex;
+                    column-gap: 0.3rem;
+                }
             }
         }
     }

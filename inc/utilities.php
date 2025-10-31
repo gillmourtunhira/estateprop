@@ -148,13 +148,48 @@ function register_properties_rest_route()
     $args = array(
         'methods' => 'GET',
         'callback' => 'get_properties_data',
-        'permission_callback' => '__return_true',
+        'permission_callback' => 'check_same_domain_permission',
         'sanitize_callback' => null,
     );
 
     register_rest_route('properties/v1', '/featured', $args);
 }
 add_action('rest_api_init', 'register_properties_rest_route');
+
+/**
+ * Check REST API permissions.
+ *
+ * @return bool True if the request has permission, false otherwise.
+ */
+function check_same_domain_permission($request)
+{
+    $referer = $request->get_header('referer');
+    $origin  = $request->get_header('origin');
+    $site_url = home_url();
+
+    // Normalize URLs (just in case)
+    $site_url = rtrim($site_url, '/');
+
+    // Allow internal requests (no referer/origin)
+    if (empty($referer) && empty($origin)) {
+        return true;
+    }
+
+    // Allow if referer or origin starts with our site URL
+    if (
+        (!empty($referer) && strpos($referer, $site_url) === 0) ||
+        (!empty($origin) && strpos($origin, $site_url) === 0)
+    ) {
+        return true;
+    }
+
+    return new WP_Error(
+        'rest_forbidden',
+        __('Access denied: This endpoint is only accessible from the same domain.'),
+        ['status' => 403]
+    );
+}
+
 
 /**
  * Callback function to fetch featured properties data.
