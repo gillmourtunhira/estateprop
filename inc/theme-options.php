@@ -32,6 +32,8 @@ function crafted_register_settings()
     register_setting('crafted_options', 'crafted_social_youtube');
     register_setting('crafted_options', 'crafted_copyright');
     register_setting('crafted_options', 'crafted_newsletter_shortcode');
+    register_setting('crafted_options', 'crafted_related_posts_content_title');
+    register_setting('crafted_options', 'crafted_related_posts_content');
 }
 add_action('admin_init', 'crafted_register_settings');
 
@@ -188,6 +190,35 @@ function crafted_render_options_page()
                     </td>
                 </tr>
 
+                <!-- Related Posts Content Title -->
+                <tr>
+                    <th scope="row">
+                        <label for="crafted_related_posts_content_title">Related Posts Content Title</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                            id="crafted_related_posts_content_title"
+                            name="crafted_related_posts_content_title"
+                            value="<?php echo esc_attr(get_option('crafted_related_posts_content_title')); ?>"
+                            class="large-text">
+                        <p class="description">Title to display above related posts section.</p>
+                    </td>
+                </tr>
+
+                <!-- Related Posts Content -->
+                <tr>
+                    <th scope="row">
+                        <label for="crafted_related_posts_content">Related Posts Content</label>
+                    </th>
+                    <td>
+                        <textarea id="crafted_related_posts_content"
+                            name="crafted_related_posts_content"
+                            rows="5"
+                            class="large-text"><?php echo esc_textarea(get_option('crafted_related_posts_content')); ?></textarea>
+                        <p class="description">Content to display above related posts section.</p>
+                    </td>
+                </tr>
+
                 <!-- Copyright Text -->
                 <tr>
                     <th scope="row">
@@ -255,6 +286,16 @@ function crafted_get_social_links()
         'instagram' => get_option('crafted_social_instagram'),
         'youtube' => get_option('crafted_social_youtube'),
     );
+}
+
+function crafted_get_related_posts_content_title()
+{
+    return get_option('crafted_related_posts_content_title');
+}
+
+function crafted_get_related_posts_content()
+{
+    return get_option('crafted_related_posts_content');
 }
 
 function crafted_get_copyright()
