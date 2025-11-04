@@ -76,5 +76,11 @@ jQuery(document).ready(function ($) {
         $("#property-results").html("<p>Error loading properties.</p>");
       },
     });
+
+    // Handle reset button
+    $("#reset-filter").on("click", function () {
+      $("#property-filter")[0].reset();
+      $("#property-filter").trigger("submit");
+    });
   });
 });
