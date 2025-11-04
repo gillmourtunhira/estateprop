@@ -200,6 +200,23 @@ function register_properties_rest_route()
 }
 add_action('rest_api_init', 'register_properties_rest_route');
 
+// Modern REST API Endpoint for Property Search
+add_action('rest_api_init', function () {
+    register_rest_route('properties/v1', '/search', [
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'crafted_get_properties',
+        'permission_callback' => 'check_same_domain_permission', // reuse your existing permission checker
+        'args' => [
+            'category'     => ['required' => false, 'type' => 'string'],
+            'property_type' => ['required' => false, 'type' => 'string'],
+            'location'     => ['required' => false, 'type' => 'string'],
+            'per_page'     => ['required' => false, 'type' => 'integer', 'default' => 6],
+            'exclude_id'   => ['required' => false, 'type' => 'integer', 'default' => 0],
+        ],
+    ]);
+});
+
+
 /**
  * Check REST API permissions.
  *
@@ -273,6 +290,20 @@ function get_properties_data($request)
                 'permalink' => get_permalink($property_id->ID),
             );
 
+            // Get property category
+            $terms = get_the_terms($property_id->ID, 'property_category');
+            if ($terms && !is_wp_error($terms)) {
+                $property_data['category'] = array(
+                    'name' => $terms[0]->name,
+                    'slug' => $terms[0]->slug,
+                );
+            } else {
+                $property_data['category'] = array(
+                    'name' => 'For Sale',
+                    'slug' => 'for-sale',
+                );
+            }
+
             // Loop through layouts to find the property-block
             if ($layouts) {
                 foreach ($layouts as $layout) {
@@ -300,4 +331,105 @@ function get_properties_data($request)
     set_transient($cache_key, $properties, $cache_time);
 
     return rest_ensure_response($properties);
+}
+
+// Modern REST API Callback for Property Search Callback
+function crafted_get_properties(WP_REST_Request $request)
+{
+    $category = sanitize_text_field($request->get_param('category'));
+    $type     = sanitize_text_field($request->get_param('property_type'));
+    $location = sanitize_text_field($request->get_param('location'));
+    $per_page = intval($request->get_param('per_page'));
+    $exclude  = intval($request->get_param('exclude_id'));
+
+    $args = [
+        'post_type'      => 'properties',
+        'posts_per_page' => $per_page ?: 6,
+        'post_status'    => 'publish',
+    ];
+
+    // Build taxonomy filters dynamically
+    $tax_query = [];
+    if ($category) {
+        $tax_query[] = [
+            'taxonomy' => 'property_category',
+            'field'    => 'slug',
+            'terms'    => $category,
+        ];
+    }
+    if ($type) {
+        $tax_query[] = [
+            'taxonomy' => 'property_type',
+            'field'    => 'slug',
+            'terms'    => $type,
+        ];
+    }
+    if ($location) {
+        $tax_query[] = [
+            'taxonomy' => 'property_location',
+            'field'    => 'slug',
+            'terms'    => $location,
+        ];
+    }
+
+    if (!empty($tax_query)) {
+        $tax_query['relation'] = 'AND';
+        $args['tax_query'] = $tax_query;
+    }
+
+    if ($exclude) {
+        $args['post__not_in'] = [$exclude];
+    }
+
+    $query = new WP_Query($args);
+    $results = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $id = get_the_ID();
+        $layouts = get_field('flexible_content', $id);
+
+        $property = [
+            'id'        => $id,
+            'title'     => get_the_title($id),
+            'image'     => get_the_post_thumbnail_url($id, 'medium'),
+            'permalink' => get_permalink($id),
+        ];
+
+        // Get property category
+        $terms = get_the_terms($id, 'property_category');
+        if ($terms && !is_wp_error($terms)) {
+            $property['category'] = [
+                'name' => $terms[0]->name,
+                'slug' => $terms[0]->slug,
+            ];
+        } else {
+            $property['category'] = [
+                'name' => 'For Sale',
+                'slug' => 'for-sale',
+            ];
+        }
+
+        if ($layouts) {
+            foreach ($layouts as $layout) {
+                if ($layout['acf_fc_layout'] === 'property-block') {
+                    $property['price']           = $layout['price'] ?? null;
+                    $property['suburb']          = $layout['suburb_address'] ?? null;
+                    $property['gallery']         = $layout['gallery'] ?? null;
+                    $property['description']     = !empty($layout['description_content'])
+                        ? strip_tags($layout['description_content'])
+                        : null;
+                    $property['property_details'] = $layout['property_details'] ?? null;
+                    $property['agent_info']      = $layout['agent_info'] ?? null;
+                    break;
+                }
+            }
+        }
+
+        $results[] = $property;
+    }
+
+    wp_reset_postdata();
+
+    return rest_ensure_response($results);
 }
