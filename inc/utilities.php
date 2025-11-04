@@ -88,11 +88,52 @@ function filter_properties_ajax()
             $query->the_post();
             // You can also use get_template_part('template-parts/property-card');
 ?>
-            <div class="property-item">
-                <h4><?php the_title(); ?></h4>
-                <p><?php the_excerpt(); ?></p>
-            </div>
-<?php
+            <a href="<?php the_permalink(); ?>" class="property-card d-block text-decoration-none text-dark">
+                <div class="property-card">
+                    <div class="property-card__image">
+                        <?php
+                        $thumb_src  = get_the_post_thumbnail_url(get_the_ID(), 'large');
+                        $thumb_alt  = get_the_title();
+                        ?>
+                        <img src="<?php echo esc_url($thumb_src); ?>" alt="<?php echo esc_attr($thumb_alt); ?>">
+                    </div>
+                    <div class="property-card__content">
+                        <h3 id="property-title-39" class="property-title text-dark"><?php the_title(); ?></h3>
+                        <p class="property-address">Houses in Suburbs</p>
+                        <div class="property-price text-dark">$300,000</div>
+                        <div class="property-features">
+                            <div class="feature text-dark">
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                                    <span>4</span>
+                                </div>
+                                <small>Bedrooms</small>
+                            </div>
+                            <div class="feature text-dark">
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-bath" aria-hidden="true"></i>
+                                    <span>2</span>
+                                </div>
+                                <small>Bathrooms</small>
+                            </div>
+                            <div class="feature text-dark">
+                                <div class="feature-icon-detail">
+                                    <i class="fa-regular fa-square" aria-hidden="true"></i>
+                                    <span>1000</span>
+                                </div>
+                                <small>Total area</small>
+                            </div>
+                            <div class="feature text-dark">
+                                <div class="feature-icon-detail">
+                                    <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+                                    <span>1</span>
+                                </div>
+                                <small>Garages</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    <?php
         }
         wp_reset_postdata();
     } else {
