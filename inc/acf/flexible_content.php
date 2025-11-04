@@ -6,6 +6,7 @@ foreach (glob(__DIR__ . '/blocks/*.php') as $filename) {
 
 $main_layouts = $layouts;
 unset($main_layouts['property-block']);
+unset($main_layouts['related_properties']);
 
 // Main Flexible Content Group (for pages and other post types)
 acf_add_local_field_group([
@@ -49,7 +50,7 @@ acf_add_local_field_group([
 // Separate Flexible Content Group for Properties (only specific blocks)
 $properties_layouts = [];
 // Add only the blocks you want for properties
-$allowed_blocks = ['property-block', 'hero']; // Replace with your actual block names
+$allowed_blocks = ['property-block', 'hero', 'related_properties']; // Replace with your actual block names
 
 foreach ($allowed_blocks as $block_name) {
     if (isset($layouts[$block_name])) {

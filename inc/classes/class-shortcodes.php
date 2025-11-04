@@ -75,7 +75,14 @@ class CraftedTheme_Shortcodes
         $atts = shortcode_atts([
             'endpoint' => rest_url('properties/v1/featured'), // default endpoint
             'per_row'  => 3, // optional, not used directly here but kept for future styling hooks
+            'number_of_properties' => 3, // optional, can be used to modify endpoint query
+            'post_id' => 0, // optional, can be used to modify endpoint query
         ], $atts, 'property_cards_from_api');
+
+        // Build the endpoint URL dynamically if needed
+        $endpoint = add_query_arg([
+            'per_page' => intval($atts['number_of_properties']),
+        ], $atts['endpoint']);
 
         // Call the REST endpoint
         $response = wp_remote_get($atts['endpoint'], [
@@ -88,14 +95,21 @@ class CraftedTheme_Shortcodes
         }
 
         $body = wp_remote_retrieve_body($response);
-        if (empty($body)) {
-            return '<p class="property-cards-empty">No properties returned by API.</p>';
-        }
-
         $data = json_decode($body, true);
-        if (json_last_error() !== JSON_ERROR_NONE || empty($data)) {
+
+        if (empty($data) || json_last_error() !== JSON_ERROR_NONE) {
             return '<p class="property-cards-error">Invalid properties data.</p>';
         }
+
+        // Filter out the current property (if post_id is provided)
+        if (!empty($atts['post_id'])) {
+            $data = array_filter($data, function ($p) use ($atts) {
+                return isset($p['id']) && intval($p['id']) !== intval($atts['post_id']);
+            });
+        }
+
+        // Limit the number of properties (in case API doesn’t handle per_page)
+        $data = array_slice($data, 0, intval($atts['number_of_properties']));
 
         // Build markup
         ob_start();

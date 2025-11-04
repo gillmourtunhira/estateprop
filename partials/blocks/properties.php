@@ -82,7 +82,10 @@ $top_content = get_sub_field('top_content');
         </div>
         <div class="properties-grid__container">
             <?php
-            echo do_shortcode('[properties_cards]');
+            if (is_singular('properties')) {
+                $post_id = get_the_ID();
+            }
+            echo do_shortcode('[properties_cards number_of_properties="' . esc_attr(get_sub_field('number_of_properties')) . '" post_id="' . esc_attr($post_id) . '"]');
             ?>
         </div>
     </div>

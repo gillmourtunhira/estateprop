@@ -1,3 +1,13 @@
+<?php
+// show the template part only for properties post type single pages
+if (is_singular('properties')) { ?>
+    <div class="container properties-grid__container">
+        <?php
+        echo do_shortcode('[properties_cards number_of_properties="3" post_id="' . get_the_ID() . '"]');
+        ?>
+    </div>
+<?php }
+?>
 <!-- Footer -->
 <!-- footer.php or footer section -->
 <footer class="site-footer">
