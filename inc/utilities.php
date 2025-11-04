@@ -37,72 +37,75 @@ function load_more_posts_ajax()
 add_action('wp_ajax_load_more_posts', 'load_more_posts_ajax');
 add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts_ajax');
 
-// AJAX handler for property filtering
+// AJAX Property Filter
 function filter_properties_ajax()
 {
-    // Verify nonce
     check_ajax_referer('property_filter_nonce', 'nonce');
 
+    // Parse serialized form string into $_POST-style array
+    parse_str($_POST['form_data'], $form_data);
+
     // Get filter parameters
-    $category = sanitize_text_field($_POST['property_category']);
-    $type = sanitize_text_field($_POST['property_type']);
-    $location = sanitize_text_field($_POST['property_location']);
+    $category = sanitize_text_field($form_data['category'] ?? '');
+    $type = sanitize_text_field($form_data['property_type'] ?? '');
+    $location = sanitize_text_field($form_data['location'] ?? '');
 
-    // Build WP_Query arguments
-    $args = array(
-        'post_type' => 'properties', // Your CPT slug
+    $args = [
+        'post_type'      => 'properties',
         'posts_per_page' => -1,
-        'tax_query' => array('relation' => 'AND')
-    );
+        'tax_query'      => ['relation' => 'AND'],
+    ];
 
-    // Add taxonomy filters
     if (!empty($category)) {
-        $args['tax_query'][] = array(
+        $args['tax_query'][] = [
             'taxonomy' => 'property_category',
-            'field' => 'slug',
-            'terms' => $category
-        );
+            'field'    => 'slug',
+            'terms'    => $category,
+        ];
     }
 
     if (!empty($type)) {
-        $args['tax_query'][] = array(
+        $args['tax_query'][] = [
             'taxonomy' => 'property_type',
-            'field' => 'slug',
-            'terms' => $type
-        );
+            'field'    => 'slug',
+            'terms'    => $type,
+        ];
     }
 
     if (!empty($location)) {
-        $args['tax_query'][] = array(
+        $args['tax_query'][] = [
             'taxonomy' => 'property_location',
-            'field' => 'slug',
-            'terms' => $location
-        );
+            'field'    => 'slug',
+            'terms'    => $location,
+        ];
     }
 
-    // Execute query
     $query = new WP_Query($args);
 
-    // Build HTML response
-    $html = '';
+    ob_start();
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
-            $html .= '<div class="property-item">';
-            $html .= '<h4>' . get_the_title() . '</h4>';
-            $html .= '<p>' . get_the_excerpt() . '</p>';
-            $html .= '</div>';
+            // You can also use get_template_part('template-parts/property-card');
+?>
+            <div class="property-item">
+                <h4><?php the_title(); ?></h4>
+                <p><?php the_excerpt(); ?></p>
+            </div>
+<?php
         }
         wp_reset_postdata();
     } else {
-        $html = '<p>No properties found.</p>';
+        echo '<p>No properties found.</p>';
     }
 
-    wp_send_json_success(array('html' => $html));
-}
+    $html = ob_get_clean();
 
+    wp_send_json_success(['html' => $html]);
+}
 add_action('wp_ajax_filter_properties', 'filter_properties_ajax');
 add_action('wp_ajax_nopriv_filter_properties', 'filter_properties_ajax');
+
 
 // Add User Role Agent and Property Capabilities
 function add_agent_role_and_capabilities()

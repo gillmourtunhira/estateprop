@@ -80,7 +80,7 @@ $top_content = get_sub_field('top_content');
             }
             ?>
         </div>
-        <div class="properties-grid__container">
+        <div class="properties-grid__container" id="property-results">
             <?php
             if (is_singular('properties')) {
                 $post_id = get_the_ID();

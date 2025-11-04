@@ -58,6 +58,14 @@ function crafted_theme_enqueue_assets()
         true
     );
 
+    wp_enqueue_script(
+        'properties-ajax',
+        get_template_directory_uri() . '/assets/js/properties-ajax.js',
+        ['jquery'],
+        null,
+        true
+    );
+
     // Localize once with all necessary data
     wp_localize_script('properties-ajax', 'propertiesAjax', [
         'ajax_url' => admin_url('admin-ajax.php'),
