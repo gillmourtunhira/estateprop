@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A utility class to handle responsive image and video rendering in WordPress.
  *
@@ -113,8 +114,8 @@ class Bootstrap_Image_Helper
         ];
 
         // Get all available image sizes
-        $intermediate_sizes = function_exists('get_intermediate_image_sizes') 
-            ? get_intermediate_image_sizes() 
+        $intermediate_sizes = function_exists('get_intermediate_image_sizes')
+            ? get_intermediate_image_sizes()
             : ['thumbnail', 'medium', 'large', 'full'];
 
         // Build srcsets for different formats
@@ -171,10 +172,10 @@ class Bootstrap_Image_Helper
 
         // Use picture element if we have modern formats
         $has_modern_formats = !empty($format_srcsets['avif']) || !empty($format_srcsets['webp']);
-        
+
         if ($has_modern_formats) {
             $output = '<picture>';
-            
+
             // AVIF source (most modern)
             if (!empty($format_srcsets['avif'])) {
                 $output .= '<source type="image/avif"';
@@ -184,7 +185,7 @@ class Bootstrap_Image_Helper
                 }
                 $output .= '>';
             }
-            
+
             // WebP source
             if (!empty($format_srcsets['webp'])) {
                 $output .= '<source type="image/webp"';
@@ -194,21 +195,21 @@ class Bootstrap_Image_Helper
                 }
                 $output .= '>';
             }
-            
+
             // Fallback img tag
             $output .= '<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="';
             $output .= ' alt="' . esc_attr($alt_text) . '"';
             $output .= ' class="' . esc_attr($class) . '"';
             $output .= ' loading="lazy"';
             $output .= ' data-src="' . esc_url($src) . '"';
-            
+
             if (!empty($format_srcsets['original'])) {
                 $output .= ' data-srcset="' . esc_attr($format_srcsets['original']) . '"';
                 if ($sizes) {
                     $output .= ' data-sizes="' . esc_attr($sizes) . '"';
                 }
             }
-            
+
             $output .= '>';
             $output .= '</picture>';
         } else {
@@ -218,14 +219,14 @@ class Bootstrap_Image_Helper
             $output .= ' class="' . esc_attr($class) . '"';
             $output .= ' loading="lazy"';
             $output .= ' data-src="' . esc_url($src) . '"';
-            
+
             if (!empty($format_srcsets['original'])) {
                 $output .= ' data-srcset="' . esc_attr($format_srcsets['original']) . '"';
                 if ($sizes) {
                     $output .= ' data-sizes="' . esc_attr($sizes) . '"';
                 }
             }
-            
+
             $output .= '>';
         }
 
@@ -238,7 +239,7 @@ class Bootstrap_Image_Helper
                         entries.forEach(function(entry) {
                             if (entry.isIntersecting) {
                                 const lazyElement = entry.target;
-                                
+
                                 // Handle img tags
                                 if (lazyElement.tagName === "IMG") {
                                     if (lazyElement.dataset.src) {
@@ -252,7 +253,7 @@ class Bootstrap_Image_Helper
                                     }
                                     lazyElement.removeAttribute("loading");
                                 }
-                                
+
                                 // Handle source tags in picture elements
                                 if (lazyElement.tagName === "SOURCE") {
                                     if (lazyElement.dataset.srcset) {
@@ -262,14 +263,14 @@ class Bootstrap_Image_Helper
                                         lazyElement.sizes = lazyElement.dataset.sizes;
                                     }
                                 }
-                                
+
                                 observer.unobserve(lazyElement);
                             }
                         });
                     }, {
                         rootMargin: "0px 0px 200px 0px"
                     });
-                    
+
                     lazyImages.forEach(function(lazyElement) {
                         lazyLoadObserver.observe(lazyElement);
                     });
@@ -298,7 +299,7 @@ class Bootstrap_Image_Helper
 
         $upload_dir = wp_upload_dir();
         $metadata = wp_get_attachment_metadata($attachment_id);
-        
+
         if (!$metadata) {
             return $srcsets;
         }
@@ -310,20 +311,20 @@ class Bootstrap_Image_Helper
 
         foreach ($intermediate_sizes as $size_name) {
             $image_data = wp_get_attachment_image_src($attachment_id, $size_name);
-            
+
             if ($image_data) {
                 $src = $image_data[0];
                 $width = $image_data[1];
-                
+
                 // Add to original srcset
                 $srcsets['original'] .= "{$src} {$width}w, ";
-                
+
                 // Check for WebP version
                 $webp_url = self::getModernFormatUrl($src, 'webp', $base_dir, $base_name, $size_name, $metadata);
                 if ($webp_url) {
                     $srcsets['webp'] .= "{$webp_url} {$width}w, ";
                 }
-                
+
                 // Check for AVIF version
                 $avif_url = self::getModernFormatUrl($src, 'avif', $base_dir, $base_name, $size_name, $metadata);
                 if ($avif_url) {
@@ -355,7 +356,7 @@ class Bootstrap_Image_Helper
     {
         // Try to construct the modern format filename
         $modern_file = '';
-        
+
         if ($size_name === 'full') {
             $modern_file = $base_dir . '/' . $base_name . '.' . $format;
         } elseif (isset($metadata['sizes'][$size_name]['file'])) {
@@ -363,7 +364,7 @@ class Bootstrap_Image_Helper
             $size_info = pathinfo($size_file);
             $modern_file = $base_dir . '/' . $size_info['filename'] . '.' . $format;
         }
-        
+
         // Check if the file exists
         if ($modern_file && file_exists($modern_file)) {
             // Convert file path to URL
@@ -371,7 +372,7 @@ class Bootstrap_Image_Helper
             $modern_url = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $modern_file);
             return $modern_url;
         }
-        
+
         return false;
     }
 
@@ -384,14 +385,14 @@ class Bootstrap_Image_Helper
     public static function getAttachmentIdFromUrl($url)
     {
         global $wpdb;
-        
+
         if (empty($url)) {
             return false;
         }
-        
+
         // Remove query strings and fragments
         $url = preg_replace('/[?#].*/', '', $url);
-        
+
         // Try to get the attachment ID
         $attachment_id = $wpdb->get_var(
             $wpdb->prepare(
@@ -399,12 +400,48 @@ class Bootstrap_Image_Helper
                 $url
             )
         );
-        
+
         if (!$attachment_id) {
             // Try using attachment_url_to_postid as fallback
             $attachment_id = attachment_url_to_postid($url);
         }
-        
+
         return $attachment_id ? (int) $attachment_id : false;
+    }
+}
+
+/**
+ * A utility class to handle Bootstrap button rendering in WordPress.
+ *
+ * This class provides a static method to generate a Bootstrap-styled button
+ * from a WordPress link object.
+ */
+class Bootstrap_Button_Helper
+{
+    /**
+     * Renders a Bootstrap button from a WordPress link object.
+     * @param array $link_object The WordPress link object with 'url', 'title', and 'target' keys.
+     * @param string $class Additional CSS classes for the button.
+     * @return string The complete HTML <a> tag styled as a Bootstrap button.
+     */
+    public static function renderButtonFromLinkObject(
+        $link_object,
+        $class = "btn btn-primary",
+    ) {
+        if (empty($link_object) || !is_array($link_object)) {
+            return "";
+        }
+        $url = isset($link_object["url"]) ? $link_object["url"] : "#";
+        $title = isset($link_object["title"])
+            ? $link_object["title"]
+            : "Learn More";
+        $target = isset($link_object["target"])
+            ? $link_object["target"]
+            : "_self";
+
+        $output = '<a href="' . esc_url($url) . '" class="' . esc_attr($class) . '" target="' . esc_attr($target) . '">';
+        $output .= esc_html($title);
+        $output .= '</a>';
+        return $output;
     }
 }
