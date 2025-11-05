@@ -73,7 +73,7 @@ function crafted_theme_enqueue_assets()
         'load_more_nonce' => wp_create_nonce('load_more_nonce'),
         'posts_per_page' => get_option('posts_per_page'),
         'text' => [
-            'loading' => __('Loading...', 'textdomain'),
+            'loading' => __('Loading...', 'crafted-theme'),
             'no_more' => __('No more properties', 'crafted-theme'),
             'error' => __('Something went wrong', 'crafted-theme'),
         ]

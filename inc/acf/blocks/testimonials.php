@@ -50,6 +50,30 @@ return [
                     'label' => 'Author',
                     'type' => 'text',
                     'required' => 0,
+                    'wrapper' => [
+                        'width' => '33',
+                    ],
+                ],
+                [
+                    'key' => 'crafted_testimonial_author_title',
+                    'name' => 'author_title',
+                    'label' => 'Author Title',
+                    'type' => 'text',
+                    'required' => 0,
+                    'wrapper' => [
+                        'width' => '33',
+                    ],
+                ],
+                [
+                    'key' => 'crafted_testimonial_author_image',
+                    'name' => 'author_image',
+                    'label' => 'Author Image',
+                    'type' => 'file',
+                    'mime_types' => 'jpg,jpeg,png,gif,svg',
+                    'required' => 0,
+                    'wrapper' => [
+                        'width' => '33',
+                    ],
                 ],
             ],
         ],

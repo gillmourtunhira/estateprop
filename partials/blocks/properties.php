@@ -84,6 +84,8 @@ $top_content = get_sub_field('top_content');
             <?php
             if (is_singular('properties')) {
                 $post_id = get_the_ID();
+            } else {
+                $post_id = '';
             }
             echo do_shortcode('[properties_cards number_of_properties="' . esc_attr(get_sub_field('number_of_properties')) . '" post_id="' . esc_attr($post_id) . '"]');
             ?>
