@@ -1,11 +1,11 @@
 /**
  * Import Bootstrap
  */
-
 @use "sass:color";
 @use "../../node_modules/bootstrap/scss/bootstrap" as *;
-@use "variables" as vars;
 
+@use "variables" as vars;
+@use "mixins";
 @use "layouts/header";
 @use "layouts/hero";
 @use "layouts/footer";
@@ -34,6 +34,7 @@ html {
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     font-family: vars.$font-family;
     font-size: 16px;
@@ -66,22 +67,18 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
     gap: 0.5rem;
-
     &-teal {
         background-color: vars.$teal;
-
         &:hover {
             background-color: color.adjust(vars.$teal, $lightness: 10%);
             color: initial;
         }
     }
-
     &-icon {
         width: 2.5rem;
         height: 2.5rem;
         padding: 0;
     }
-
     &-outline {
         background-color: transparent;
         color: var(--dark-blue);
@@ -90,7 +87,6 @@ body {
             color 0.3s ease,
             background-color 0.3s ease,
             border-color 0.3s ease;
-
         &:hover {
             background-color: rgb(32 201 151 / 34%);
             border-color: #20c997;

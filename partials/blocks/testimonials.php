@@ -1,7 +1,7 @@
 <!-- Testimonials Block -->
 <section class="testimonials my-5">
     <div class="container testimonials-wrapper">
-        <div class="label"><span class="badge text-bg-info">Testimonials</span></div>
+        <div class="label"><span class="badge text-bg-light">Testimonials</span></div>
         <?php if (get_sub_field('top_content')) : ?>
             <div class="top-content text-center my-4">
                 <?php echo wp_kses_post(get_sub_field('top_content')); ?>
@@ -13,6 +13,7 @@
                     <div class="testimonial-item">
                         <div class="card h-100">
                             <div class="card-body">
+                                <span><i class="fas fa-quote-left fa-2x text-info mb-3"></i></span>
                                 <?php if (get_sub_field('quote')) : ?>
                                     <blockquote class="blockquote mb-3">
                                         <p class="mb-0"><?php echo wp_kses_post(get_sub_field('quote')); ?></p>
