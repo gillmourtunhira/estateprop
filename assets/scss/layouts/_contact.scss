@@ -52,6 +52,10 @@
 
         @extend %content-styles;
 
+        h2,
+        h3 {
+            color: #fff;
+        }
         .form-wrapper {
             .wpcf7-form {
                 display: flex;

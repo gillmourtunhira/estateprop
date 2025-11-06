@@ -84,3 +84,167 @@ jQuery(document).ready(function ($) {
     });
   });
 });
+
+/*
+Property Archive Filters
+*/
+jQuery(function ($) {
+  const $form = $("#property-filter-form");
+  const $search = $("#property-search");
+  const $grid = $("#properties-grid");
+  const $pagination = $("#pagination");
+  const $priceMin = $("#price-min");
+  const $priceMax = $("#price-max");
+  const $priceValue = $("#price-value"); // shows min–max text
+  let currentPage = 1;
+
+  function fetchProperties(page = 1) {
+    currentPage = page;
+
+    const filters = {
+      search: $search.val(),
+      property_type:
+        $form.find("input[name='property_type']:checked").val() || "",
+      bedrooms: $form.find("input[name='bedrooms']:checked").val() || "",
+      availability:
+        $form.find("input[name='availability']:checked").val() || "",
+      price_min: $priceMin.val(),
+      price_max: $priceMax.val(),
+      page: currentPage,
+      per_page: 6,
+    };
+
+    $grid.html('<div class="loading text-center w-100 py-5">Loading...</div>');
+    $pagination.empty();
+
+    $.ajax({
+      url: "/wp-json/properties/v1/search", // simpler and reliable
+      data: filters,
+      method: "GET",
+      success: function (response) {
+        renderProperties(response); // not response.data
+      },
+      error: function (xhr) {
+        console.error("API error:", xhr);
+        $grid.html("<p class='text-center py-5'>Error loading properties.</p>");
+      },
+    });
+  }
+
+  function renderProperties(properties) {
+    if (!properties || !properties.length) {
+      $grid.html("<p class='text-center py-5'>No properties found.</p>");
+      return;
+    }
+
+    let html = "";
+    properties.forEach((p) => {
+      const img =
+        p.image || "https://via.placeholder.com/400x250?text=No+Image";
+      const id = p.id;
+      const title = p.title;
+      const suburb = p.suburb || "";
+      const bedrooms = p.property_details?.[0]?.bedrooms_detail || "N/A";
+      const bathrooms = p.property_details?.[0]?.bathrooms_detail || "N/A";
+      const area = p.property_details?.[0]?.total_area_detail || "N/A";
+      const garages = p.property_details?.[0]?.garages_detail || "N/A";
+      const price = p.price
+        ? "$" + p.price.toLocaleString()
+        : "Contact for price";
+      const link = p.permalink;
+
+      html += `
+        <a href="${link}" class="property-card-link text-decoration-none text-underline-none" aria-labelledby="property-title-${id}">
+            <div class="property-card">
+                <div class="property-card__image">
+                    <img src="${img}" alt="${title}">
+                </div>
+                <div class="property-card__content">
+                    <h3 id="property-title-${title}" class="property-title text-dark">${title}</h3>
+                    ${suburb ? `<p class="property-address">${suburb}</p>` : ""}
+                    ${price ? `<div class="property-price text-dark">${price}</div>` : ""}
+
+                    <div class="property-features">
+                        <div class="feature text-dark">
+                            <div class="feature-icon-detail">
+                                <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                                <span>${bedrooms}</span>
+                            </div>
+                            <small>Bedrooms</small>
+                        </div>
+                        <div class="feature text-dark">
+                            <div class="feature-icon-detail">
+                                <i class="fa-solid fa-bath" aria-hidden="true"></i>
+                                <span>${bathrooms}</span>
+                            </div>
+                            <small>Bathrooms</small>
+                        </div>
+                        <div class="feature text-dark">
+                            <div class="feature-icon-detail">
+                                <i class="fa-regular fa-square" aria-hidden="true"></i>
+                                <span>${area}</span>
+                            </div>
+                            <small>Total area</small>
+                        </div>
+                        <div class="feature text-dark">
+                            <div class="feature-icon-detail">
+                                <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+                                <span>${garages}</span>
+                            </div>
+                            <small>Garages</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+      `;
+    });
+
+    $grid.html(html);
+  }
+
+  function renderPagination(totalPages) {
+    if (!totalPages || totalPages <= 1) return;
+
+    let html =
+      '<ul class="pagination-list d-flex gap-2 justify-content-center">';
+    for (let i = 1; i <= totalPages; i++) {
+      const active = i === currentPage ? "active" : "";
+      html += `<li><button class="page-btn ${active}" data-page="${i}">${i}</button></li>`;
+    }
+    html += "</ul>";
+
+    $pagination.html(html);
+  }
+
+  // 🔹 Event Listeners
+  $form.on("change", "input, select", function () {
+    fetchProperties(1);
+  });
+
+  $search.on("keyup", function () {
+    clearTimeout($.data(this, "timer"));
+    const wait = setTimeout(() => fetchProperties(1), 400);
+    $(this).data("timer", wait);
+  });
+
+  $pagination.on("click", ".page-btn", function () {
+    const page = $(this).data("page");
+    fetchProperties(page);
+  });
+
+  // 🔹 Price Range Slider
+  $priceMin.on("input", updatePriceRange);
+  $priceMax.on("input", updatePriceRange);
+
+  function updatePriceRange() {
+    const min = parseInt($priceMin.val());
+    const max = parseInt($priceMax.val());
+    $priceValue.text(`$${min.toLocaleString()} - $${max.toLocaleString()}`);
+    fetchProperties(1);
+  }
+
+  // Initial Load
+  fetchProperties();
+});

@@ -68,6 +68,7 @@ function crafted_theme_enqueue_assets()
 
     // Localize once with all necessary data
     wp_localize_script('properties-ajax', 'propertiesAjax', [
+        'rest_url' => esc_url(rest_url('/')),
         'ajax_url' => admin_url('admin-ajax.php'),
         'filter_nonce' => wp_create_nonce('property_filter_nonce'),
         'load_more_nonce' => wp_create_nonce('load_more_nonce'),
