@@ -1,0 +1,123 @@
+@use "../mixins";
+
+.locations {
+    .top-content {
+        text-align: center;
+        @extend %content-styles;
+        .description {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+            color: #555;
+        }
+    }
+
+    .locations-grid {
+        column-count: 3;
+        column-gap: 1.5rem;
+
+        @media (max-width: 992px) {
+            column-count: 2;
+        }
+
+        @media (max-width: 576px) {
+            column-count: 1;
+        }
+
+        .location-card {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+            break-inside: avoid;
+            page-break-inside: avoid; // For better browser support
+            cursor: pointer;
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .location-image {
+                background-size: cover;
+                background-position: center;
+                border-radius: 1rem;
+                position: relative;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-start;
+                overflow: hidden;
+                min-height: 250px; // Minimum height
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    /* backdrop-filter: blur(2px); */
+                    z-index: 0;
+                }
+
+                .overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(
+                        to top,
+                        rgba(0, 0, 0, 0.6),
+                        rgba(0, 0, 0, 0)
+                    );
+                    z-index: 1;
+                }
+
+                .location-info {
+                    position: relative;
+                    z-index: 2;
+                    padding: 1.5rem;
+                    color: #fff;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+                    .location-name {
+                        font-weight: 700;
+                        font-size: 1.25rem;
+                        margin: 0 0 0.25rem;
+                    }
+
+                    .property-count {
+                        font-size: 0.9rem;
+                        opacity: 0.9;
+                        margin: 0;
+                    }
+                }
+            }
+
+            // Create varied heights using nth-child
+            &:nth-child(6n + 1) .location-image {
+                aspect-ratio: 4 / 3;
+            }
+
+            &:nth-child(6n + 2) .location-image {
+                aspect-ratio: 3 / 4;
+            }
+
+            &:nth-child(6n + 3) .location-image {
+                aspect-ratio: 1 / 1;
+            }
+
+            &:nth-child(6n + 4) .location-image {
+                aspect-ratio: 4 / 3;
+            }
+
+            &:nth-child(6n + 5) .location-image {
+                aspect-ratio: 3 / 4;
+            }
+
+            &:nth-child(6n + 6) .location-image {
+                aspect-ratio: 5 / 4;
+            }
+        }
+    }
+}
