@@ -22,10 +22,17 @@ get_header();
                     <div class="filter-group mb-4">
                         <h5 class="filter-title">Property Type</h5>
                         <div class="filter-options">
-                            <label><input type="radio" name="property_type" value="apartment"> Apartment</label>
-                            <label><input type="radio" name="property_type" value="villa"> Villa</label>
-                            <label><input type="radio" name="property_type" value="plot"> Plot</label>
-                            <label><input type="radio" name="property_type" value="builder-floor"> Builder Floor</label>
+                            <?php
+                            $types = get_terms([
+                                'taxonomy' => 'property_type',
+                                'hide_empty' => true,
+                            ]);
+                            if (!empty($types) && !is_wp_error($types)) {
+                                foreach ($types as $type) {
+                                    echo '<label><input type="checkbox" name="property_type[]" value="' . esc_attr($type->slug) . '"> ' . esc_html($type->name) . '</label>';
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
 
