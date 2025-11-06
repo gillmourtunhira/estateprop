@@ -6,7 +6,7 @@ $top_title = get_sub_field('top_title');
 $contact_form_shortcode = get_sub_field('contact_form');
 $background_image = get_sub_field('background_image');
 ?>
-<section class="contact-cta" style="background-image: url('<?php echo esc_url($background_image); ?>);" id="<?php echo esc_attr($anchor); ?>">
+<section class="contact-cta bg-<?php echo ($background_image) ? '' : 'info-subtle' ?>" style="background-image: url('<?php echo esc_url($background_image); ?>);" id="<?php echo esc_attr($anchor); ?>">
     <div class="container">
         <div class="contact-cta__wrapper">
             <!-- Left: Contact Form -->
