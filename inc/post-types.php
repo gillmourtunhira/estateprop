@@ -9,7 +9,8 @@
  */
 
 // Register Properties Custom Post Type
-function register_properties_post_type() {
+function register_properties_post_type()
+{
     $labels = array(
         'name'                  => _x('Properties', 'Post Type General Name', 'textdomain'),
         'singular_name'         => _x('Property', 'Post Type Singular Name', 'textdomain'),
@@ -69,7 +70,8 @@ add_action('init', 'register_properties_post_type', 0);
 
 
 // Register Property Category Taxonomy
-function register_property_category_taxonomy() {
+function register_property_category_taxonomy()
+{
     $labels = array(
         'name'                       => _x('Property Categories', 'Taxonomy General Name', 'textdomain'),
         'singular_name'              => _x('Property Category', 'Taxonomy Singular Name', 'textdomain'),
@@ -111,7 +113,8 @@ add_action('init', 'register_property_category_taxonomy', 0);
 
 
 // Register Property Type Taxonomy
-function register_property_type_taxonomy() {
+function register_property_type_taxonomy()
+{
     $labels = array(
         'name'                       => _x('Property Types', 'Taxonomy General Name', 'textdomain'),
         'singular_name'              => _x('Property Type', 'Taxonomy Singular Name', 'textdomain'),
@@ -153,7 +156,8 @@ add_action('init', 'register_property_type_taxonomy', 0);
 
 
 // Register Property Location Taxonomy
-function register_property_location_taxonomy() {
+function register_property_location_taxonomy()
+{
     $labels = array(
         'name'                       => _x('Locations', 'Taxonomy General Name', 'textdomain'),
         'singular_name'              => _x('Location', 'Taxonomy Singular Name', 'textdomain'),
@@ -195,7 +199,8 @@ add_action('init', 'register_property_location_taxonomy', 0);
 
 
 // Flush rewrite rules on theme activation (run once)
-function properties_rewrite_flush() {
+function properties_rewrite_flush()
+{
     register_properties_post_type();
     register_property_category_taxonomy();
     register_property_type_taxonomy();
@@ -206,7 +211,8 @@ register_activation_hook(__FILE__, 'properties_rewrite_flush');
 
 
 // Optional: Add default terms when CPT is registered
-function add_default_property_terms() {
+function add_default_property_terms()
+{
     // Add default categories
     if (!term_exists('For Sale', 'property_category')) {
         wp_insert_term('For Sale', 'property_category', array('slug' => 'for-sale'));
@@ -227,12 +233,11 @@ function add_default_property_terms() {
     }
 
     // Add default locations
-    $locations = array('Downtown', 'Suburbs', 'Waterfront', 'Countryside');
-    foreach ($locations as $location) {
-        if (!term_exists($location, 'property_location')) {
-            wp_insert_term($location, 'property_location', array('slug' => strtolower($location)));
-        }
-    }
+    // $locations = array('Downtown', 'Suburbs', 'Waterfront', 'Countryside');
+    // foreach ($locations as $location) {
+    //     if (!term_exists($location, 'property_location')) {
+    //         wp_insert_term($location, 'property_location', array('slug' => strtolower($location)));
+    //     }
+    // }
 }
 add_action('init', 'add_default_property_terms');
-?>

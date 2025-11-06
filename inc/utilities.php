@@ -323,3 +323,110 @@ function crafted_get_properties(WP_REST_Request $request)
 
     return rest_ensure_response($results);
 }
+
+/**
+ * Add image field to "Add New" form in property location taxonomy
+ *
+ * @param string $taxonomy The taxonomy slug.
+ */
+function property_location_add_image_field($taxonomy)
+{
+?>
+    <div class="form-field term-group">
+        <label for="property_location_image"><?php _e('Category Image', 'crafted-theme'); ?></label>
+        <input type="hidden" id="property_location_image" name="property_location_image" value="">
+        <div id="property_location_image_preview"></div>
+        <button type="button" class="button upload_image_button"><?php _e('Upload Image', 'crafted-theme'); ?></button>
+        <button type="button" class="button remove_image_button" style="display:none;"><?php _e('Remove Image', 'crafted-theme'); ?></button>
+    </div>
+<?php
+}
+add_action('property_location_add_form_fields', 'property_location_add_image_field');
+
+/**
+ * Add image field to "Edit" form in property location taxonomy
+ *
+ * @param WP_Term $term The term object.
+ */
+function property_location_edit_image_field($term)
+{
+    $image_id = get_term_meta($term->term_id, 'property_location_image', true);
+    $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
+?>
+    <tr class="form-field term-group-wrap">
+        <th scope="row"><label for="property_location_image"><?php _e('Category Image', 'crafted-theme'); ?></label></th>
+        <td>
+            <input type="hidden" id="property_location_image" name="property_location_image" value="<?php echo esc_attr($image_id); ?>">
+            <div id="property_location_image_preview">
+                <?php if ($image_url): ?>
+                    <img src="<?php echo esc_url($image_url); ?>" style="max-width:100%; height:auto;">
+                <?php endif; ?>
+            </div>
+            <button type="button" class="button upload_image_button"><?php _e('Upload Image', 'crafted-theme'); ?></button>
+            <button type="button" class="button remove_image_button" style="<?php echo $image_url ? '' : 'display:none;'; ?>"><?php _e('Remove Image', 'crafted-theme'); ?></button>
+        </td>
+    </tr>
+<?php
+}
+add_action('property_location_edit_form_fields', 'property_location_edit_image_field');
+
+/**
+ * Save the image field when a term is created or edited
+ *
+ * @param int $term_id The term ID.
+ */
+function save_property_location_image($term_id)
+{
+    if (isset($_POST['property_location_image'])) {
+        $image_id = sanitize_text_field($_POST['property_location_image']);
+        update_term_meta($term_id, 'property_location_image', $image_id);
+    }
+}
+add_action('created_property_location', 'save_property_location_image');
+add_action('edited_property_location', 'save_property_location_image');
+
+/**
+ * Enqueue Media Uploader scripts for taxonomy image fields
+ *
+ * @param string $hook The current admin page.
+ */
+function property_location_image_enqueue($hook)
+{
+    if ('edit-tags.php' !== $hook && 'term.php' !== $hook) return;
+    if (!isset($_GET['taxonomy']) || $_GET['taxonomy'] !== 'property_location') return;
+
+    wp_enqueue_media();
+    wp_add_inline_script('jquery', "
+             jQuery(document).ready(function($) {
+                 var frame;
+                 $('.upload_image_button').on('click', function(e) {
+                     e.preventDefault();
+                     var button = $(this);
+
+                     if (frame) frame.open();
+                     frame = wp.media({
+                         title: 'Select or Upload Image',
+                         button: { text: 'Use this image' },
+                         multiple: false
+                     });
+
+                     frame.on('select', function() {
+                         var attachment = frame.state().get('selection').first().toJSON();
+                         $('#property_location_image').val(attachment.id);
+                         $('#property_location_image_preview').html('<img src=\"' + attachment.sizes.thumbnail.url + '\" style=\"max-width:100px;height:auto;\" />');
+                         $('.remove_image_button').show();
+                     });
+
+                     frame.open();
+                 });
+
+                 $('.remove_image_button').on('click', function(e) {
+                     e.preventDefault();
+                     $('#property_location_image').val('');
+                     $('#property_location_image_preview').html('');
+                     $(this).hide();
+                 });
+             });
+         ");
+}
+add_action('admin_enqueue_scripts', 'property_location_image_enqueue');
