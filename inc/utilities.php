@@ -90,18 +90,25 @@ function register_properties_rest_route()
 }
 add_action('rest_api_init', 'register_properties_rest_route');
 
+
 // Modern REST API Endpoint for Property Search
 add_action('rest_api_init', function () {
     register_rest_route('properties/v1', '/search', [
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'crafted_get_properties',
-        'permission_callback' => 'check_same_domain_permission', // reuse your existing permission checker
+        'permission_callback' => 'check_same_domain_permission',
         'args' => [
-            'category'     => ['required' => false, 'type' => 'string'],
-            'property_type' => ['required' => false, 'type' => 'string'],
-            'location'     => ['required' => false, 'type' => 'string'],
-            'per_page'     => ['required' => false, 'type' => 'integer', 'default' => 6],
-            'exclude_id'   => ['required' => false, 'type' => 'integer', 'default' => 0],
+            'category'      => ['required' => false, 'type' => 'string'],
+            'property_type' => ['required' => false, 'type' => 'array'],
+            'location'      => ['required' => false, 'type' => 'string'],
+            'search'        => ['required' => false, 'type' => 'string'],
+            'bedrooms'      => ['required' => false, 'type' => 'string'],
+            'availability'  => ['required' => false, 'type' => 'string'],
+            'price_min'     => ['required' => false, 'type' => 'integer'],
+            'price_max'     => ['required' => false, 'type' => 'integer'],
+            'per_page'      => ['required' => false, 'type' => 'integer', 'default' => 6],
+            'page'          => ['required' => false, 'type' => 'integer', 'default' => 1],
+            'exclude_id'    => ['required' => false, 'type' => 'integer', 'default' => 0],
         ],
     ]);
 });
@@ -224,22 +231,58 @@ function get_properties_data($request)
 }
 
 // Modern REST API Callback for Property Search Callback
+// Modern REST API Endpoint for Property Search
+add_action('rest_api_init', function () {
+    register_rest_route('properties/v1', '/search', [
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'crafted_get_properties',
+        'permission_callback' => 'check_same_domain_permission',
+        'args' => [
+            'category'      => ['required' => false, 'type' => 'string'],
+            'property_type' => ['required' => false, 'type' => 'array'],
+            'location'      => ['required' => false, 'type' => 'string'],
+            'search'        => ['required' => false, 'type' => 'string'],
+            'bedrooms'      => ['required' => false, 'type' => 'string'],
+            'availability'  => ['required' => false, 'type' => 'string'],
+            'price_min'     => ['required' => false, 'type' => 'integer'],
+            'price_max'     => ['required' => false, 'type' => 'integer'],
+            'per_page'      => ['required' => false, 'type' => 'integer', 'default' => 6],
+            'page'          => ['required' => false, 'type' => 'integer', 'default' => 1],
+            'exclude_id'    => ['required' => false, 'type' => 'integer', 'default' => 0],
+        ],
+    ]);
+});
+
+// Modern REST API Callback for Property Search
 function crafted_get_properties(WP_REST_Request $request)
 {
-    $category = sanitize_text_field($request->get_param('category'));
-    $type     = sanitize_text_field($request->get_param('property_type'));
-    $location = sanitize_text_field($request->get_param('location'));
-    $per_page = intval($request->get_param('per_page'));
-    $exclude  = intval($request->get_param('exclude_id'));
+    $category     = sanitize_text_field($request->get_param('category'));
+    $type         = $request->get_param('property_type');
+    $location     = sanitize_text_field($request->get_param('location'));
+    $search       = sanitize_text_field($request->get_param('search'));
+    $bedrooms     = sanitize_text_field($request->get_param('bedrooms'));
+    $availability = sanitize_text_field($request->get_param('availability'));
+    $price_min    = intval($request->get_param('price_min'));
+    $price_max    = intval($request->get_param('price_max'));
+    $per_page     = intval($request->get_param('per_page')) ?: 6;
+    $page         = intval($request->get_param('page')) ?: 1;
+    $exclude      = intval($request->get_param('exclude_id'));
 
+    // Start with a large query to filter in PHP (since ACF flexible content isn't queryable via WP_Query)
     $args = [
         'post_type'      => 'properties',
-        'posts_per_page' => $per_page ?: 6,
+        'posts_per_page' => -1, // Get all, we'll filter and paginate in PHP
         'post_status'    => 'publish',
     ];
 
-    // Build taxonomy filters dynamically
+    // Search functionality
+    if (!empty($search)) {
+        $args['s'] = $search;
+    }
+
+    // Build taxonomy filters
     $tax_query = [];
+
     if ($category) {
         $tax_query[] = [
             'taxonomy' => 'property_category',
@@ -247,19 +290,45 @@ function crafted_get_properties(WP_REST_Request $request)
             'terms'    => $category,
         ];
     }
-    if ($type) {
+
+    if (!empty($type) && is_array($type)) {
         $tax_query[] = [
             'taxonomy' => 'property_type',
             'field'    => 'slug',
             'terms'    => $type,
         ];
     }
+
     if ($location) {
-        $tax_query[] = [
-            'taxonomy' => 'property_location',
-            'field'    => 'slug',
-            'terms'    => $location,
-        ];
+        // Search for terms that match the location query (slug or name)
+        $term_ids = get_terms([
+            'taxonomy'   => 'property_location',
+            'name__like' => $location,
+            'fields'     => 'ids',
+            'hide_empty' => true,
+        ]);
+
+        // Also check for exact slug match
+        $term_by_slug = get_term_by('slug', $location, 'property_location');
+        if ($term_by_slug) {
+            $term_ids[] = $term_by_slug->term_id;
+        }
+
+        if (!empty($term_ids)) {
+            $tax_query[] = [
+                'taxonomy' => 'property_location',
+                'field'    => 'term_id',
+                'terms'    => array_unique($term_ids),
+            ];
+        } else {
+            // If no location is found, we can ensure no results are returned for this query part
+            // by querying for a non-existent term.
+            $tax_query[] = [
+                'taxonomy' => 'property_location',
+                'field'    => 'slug',
+                'terms'    => 'non-existent-location-' . time(),
+            ];
+        }
     }
 
     if (!empty($tax_query)) {
@@ -272,8 +341,9 @@ function crafted_get_properties(WP_REST_Request $request)
     }
 
     $query = new WP_Query($args);
-    $results = [];
+    $all_properties = [];
 
+    // Collect all properties with their data
     while ($query->have_posts()) {
         $query->the_post();
         $id = get_the_ID();
@@ -300,28 +370,104 @@ function crafted_get_properties(WP_REST_Request $request)
             ];
         }
 
+        // Get property location
+        $location_terms = get_the_terms($id, 'property_location');
+        if ($location_terms && !is_wp_error($location_terms)) {
+            $property['location'] = [
+                'name' => $location_terms[0]->name,
+                'slug' => $location_terms[0]->slug,
+            ];
+        }
+
+        // Extract property details from flexible content
         if ($layouts) {
             foreach ($layouts as $layout) {
                 if ($layout['acf_fc_layout'] === 'property-block') {
-                    $property['price']           = $layout['price'] ?? null;
-                    $property['suburb']          = $layout['suburb_address'] ?? null;
-                    $property['gallery']         = $layout['gallery'] ?? null;
-                    $property['description']     = !empty($layout['description_content'])
+                    $property['price']            = isset($layout['price']) ? floatval($layout['price']) : null;
+                    $property['suburb']           = $layout['suburb_address'] ?? null;
+                    $property['gallery']          = $layout['gallery'] ?? null;
+                    $property['description']      = !empty($layout['description_content'])
                         ? strip_tags($layout['description_content'])
                         : null;
                     $property['property_details'] = $layout['property_details'] ?? null;
-                    $property['agent_info']      = $layout['agent_info'] ?? null;
+                    $property['agent_info']       = $layout['agent_info'] ?? null;
+
+                    // Extract specific details for filtering
+                    if (!empty($layout['property_details']) && is_array($layout['property_details'])) {
+                        foreach ($layout['property_details'] as $detail) {
+                            if (isset($detail['bedrooms_detail'])) {
+                                // Handle both numeric and string values, extract just the number
+                                $bedroom_value = $detail['bedrooms_detail'];
+                                // Remove any non-numeric characters except numbers
+                                $property['bedrooms_count'] = intval(preg_replace('/[^0-9]/', '', $bedroom_value));
+                            }
+                            if (isset($detail['bathrooms_detail'])) {
+                                $bathroom_value = $detail['bathrooms_detail'];
+                                $property['bathrooms_count'] = intval(preg_replace('/[^0-9]/', '', $bathroom_value));
+                            }
+                        }
+                    }
                     break;
                 }
             }
         }
 
-        $results[] = $property;
+        $all_properties[] = $property;
     }
 
     wp_reset_postdata();
 
-    return rest_ensure_response($results);
+    // Now filter by bedrooms and price in PHP
+    $filtered_properties = array_filter($all_properties, function ($property) use ($bedrooms, $price_min, $price_max) {
+        $passes = true;
+
+        // Filter by bedrooms
+        if (!empty($bedrooms)) {
+            $bedroom_filter = intval($bedrooms);
+            $property_bedrooms = $property['bedrooms_count'] ?? 0;
+
+            // If filter is 4, match 4 or more
+            if ($bedroom_filter >= 4) {
+                $passes = $passes && ($property_bedrooms >= 4);
+            } else {
+                $passes = $passes && ($property_bedrooms == $bedroom_filter);
+            }
+        }
+
+        // Filter by price range
+        if ($price_min > 0 || $price_max > 0) {
+            $property_price = $property['price'] ?? 0;
+
+            if ($price_min > 0 && $property_price < $price_min) {
+                $passes = false;
+            }
+
+            if ($price_max > 0 && $price_max < 5000000 && $property_price > $price_max) {
+                $passes = false;
+            }
+        }
+
+        return $passes;
+    });
+
+    // Reset array keys
+    $filtered_properties = array_values($filtered_properties);
+
+    // Manual pagination
+    $total = count($filtered_properties);
+    $offset = ($page - 1) * $per_page;
+    $results = array_slice($filtered_properties, $offset, $per_page);
+
+    // Return results with pagination meta
+    $response = [
+        'properties' => $results,
+        'total' => $total,
+        'pages' => ceil($total / $per_page),
+        'current_page' => $page,
+        'per_page' => $per_page,
+    ];
+
+    return rest_ensure_response($response);
 }
 
 /**

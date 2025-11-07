@@ -93,23 +93,25 @@ jQuery(function ($) {
   const $search = $("#property-search");
   const $grid = $("#properties-grid");
   const $pagination = $("#pagination");
-  const $priceMin = $("#price-min");
-  const $priceMax = $("#price-max");
-  const $priceValue = $("#price-value"); // shows min–max text
+  const $priceRange = $("#price-range");
+  const $priceValue = $("#price-value");
   let currentPage = 1;
 
   function fetchProperties(page = 1) {
     currentPage = page;
 
     const filters = {
-      search: $search.val(),
-      property_type:
-        $form.find("input[name='property_type']:checked").val() || "",
+      location: $search.val(),
+      property_type: $form
+        .find("input[name='property_type[]']:checked")
+        .map(function () {
+          return $(this).val();
+        })
+        .get(),
       bedrooms: $form.find("input[name='bedrooms']:checked").val() || "",
       availability:
         $form.find("input[name='availability']:checked").val() || "",
-      price_min: $priceMin.val(),
-      price_max: $priceMax.val(),
+      price_max: $priceRange.val(),
       page: currentPage,
       per_page: 6,
     };
@@ -118,14 +120,22 @@ jQuery(function ($) {
     $pagination.empty();
 
     $.ajax({
-      url: "/wp-json/properties/v1/search", // simpler and reliable
+      url: propertiesAjax.rest_url + "properties/v1/search", // Fixed: Use full REST URL
       data: filters,
       method: "GET",
       success: function (response) {
-        renderProperties(response); // not response.data
+        if (response.properties) {
+          renderProperties(response.properties);
+          if (response.pages > 1) {
+            renderPagination(response.pages);
+          }
+        } else {
+          renderProperties(response);
+        }
       },
       error: function (xhr) {
         console.error("API error:", xhr);
+        console.error("Response:", xhr.responseText);
         $grid.html("<p class='text-center py-5'>Error loading properties.</p>");
       },
     });
@@ -153,14 +163,20 @@ jQuery(function ($) {
         : "Contact for price";
       const link = p.permalink;
 
+      // Get category info
+      const categoryName = p.category?.name || "For Sale";
+      const categorySlug = p.category?.slug || "for-sale";
+      const badgeColor = getBadgeColor(categorySlug);
+
       html += `
         <a href="${link}" class="property-card-link text-decoration-none text-underline-none" aria-labelledby="property-title-${id}">
             <div class="property-card">
                 <div class="property-card__image">
                     <img src="${img}" alt="${title}">
+                    <span class="property-badge bg-${badgeColor}">${categoryName}</span>
                 </div>
                 <div class="property-card__content">
-                    <h3 id="property-title-${title}" class="property-title text-dark">${title}</h3>
+                    <h3 id="property-title-${id}" class="property-title text-dark">${title}</h3>
                     ${suburb ? `<p class="property-address">${suburb}</p>` : ""}
                     ${price ? `<div class="property-price text-dark">${price}</div>` : ""}
 
@@ -197,11 +213,19 @@ jQuery(function ($) {
                 </div>
             </div>
         </a>
-
       `;
     });
 
     $grid.html(html);
+  }
+
+  function getBadgeColor(categorySlug) {
+    const colors = {
+      sold: "danger",
+      "for-rent": "primary",
+      "for-sale": "success",
+    };
+    return colors[categorySlug] || "success";
   }
 
   function renderPagination(totalPages) {
@@ -218,8 +242,13 @@ jQuery(function ($) {
     $pagination.html(html);
   }
 
-  // 🔹 Event Listeners
+  // Event Listeners
   $form.on("change", "input, select", function () {
+    fetchProperties(1);
+  });
+
+  $form.on("submit", function (e) {
+    e.preventDefault();
     fetchProperties(1);
   });
 
@@ -234,14 +263,20 @@ jQuery(function ($) {
     fetchProperties(page);
   });
 
-  // 🔹 Price Range Slider
-  $priceMin.on("input", updatePriceRange);
-  $priceMax.on("input", updatePriceRange);
+  // Reset Filters
+  $("body").on("click", "#reset-filters", function (e) {
+    e.preventDefault();
+    $form[0].reset();
+    $priceRange.val(500000);
+    updatePriceRange();
+  });
+
+  // Price Range Slider
+  $priceRange.on("input", updatePriceRange);
 
   function updatePriceRange() {
-    const min = parseInt($priceMin.val());
-    const max = parseInt($priceMax.val());
-    $priceValue.text(`$${min.toLocaleString()} - $${max.toLocaleString()}`);
+    const max = parseInt($priceRange.val());
+    $priceValue.text(`Up to $${max.toLocaleString()}`);
     fetchProperties(1);
   }
 

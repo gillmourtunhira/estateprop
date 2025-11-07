@@ -1,5 +1,8 @@
 <!-- Testimonials Block -->
-<section class="testimonials my-5">
+<?php
+$anchor = get_sub_field('anchor');
+?>
+<section class="testimonials my-5" <?php if ($anchor) : ?>id="<?php echo esc_attr($anchor); ?>" <?php endif; ?>>
     <div class="container testimonials-wrapper">
         <div class="label"><span class="badge text-bg-light">Testimonials</span></div>
         <?php if (get_sub_field('top_content')) : ?>

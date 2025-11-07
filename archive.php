@@ -11,7 +11,7 @@ get_header();
     <div class="container">
         <!-- Top Search -->
         <div class="properties-archive__search mb-4">
-            <input type="text" id="property-search" class="form-control" placeholder="Search locality, projects or builders...">
+            <input type="text" id="property-search" class="form-control" placeholder="Search by city...">
         </div>
 
         <div class="properties-archive__inner d-flex">
@@ -37,12 +37,11 @@ get_header();
                     </div>
 
                     <!-- Price Range -->
-                    <div class="filter-group">
-                        <label>Price Range</label>
+                    <div class="filter-group mb-4">
+                        <h5 class="filter-title">Maximum Price</h5>
                         <div class="price-range">
-                            <input type="range" id="price-min" min="0" max="5000000" value="0" step="10000">
-                            <input type="range" id="price-max" min="0" max="5000000" value="5000000" step="10000">
-                            <div id="price-value" class="price-value">$0 - $5,000,000</div>
+                            <input type="range" id="price-range" min="0" max="500000" value="500000" step="10000">
+                            <div id="price-value" class="price-value">Up to $500,000</div>
                         </div>
                     </div>
 
@@ -68,8 +67,8 @@ get_header();
                         </div>
                     </div>
 
-                    <!-- Submit -->
-                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    <!-- Reset -->
+                    <button type="button" id="reset-filters" class="btn btn-success w-100">Reset Filters</button>
                 </form>
             </aside>
 
