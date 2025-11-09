@@ -230,7 +230,6 @@ function get_properties_data($request)
     return rest_ensure_response($properties);
 }
 
-// Modern REST API Callback for Property Search Callback
 // Modern REST API Endpoint for Property Search
 add_action('rest_api_init', function () {
     register_rest_route('properties/v1', '/search', [
@@ -257,8 +256,8 @@ add_action('rest_api_init', function () {
 function crafted_get_properties(WP_REST_Request $request)
 {
     $category     = sanitize_text_field($request->get_param('category'));
-    $type         = $request->get_param('property_type');
-    $location     = sanitize_text_field($request->get_param('location'));
+    $type         = is_array($request->get_param('property_type')) ? array_map('sanitize_text_field', $request->get_param('property_type')) : [];
+    $location     = esc_sql($request->get_param('location'));
     $search       = sanitize_text_field($request->get_param('search'));
     $bedrooms     = sanitize_text_field($request->get_param('bedrooms'));
     $availability = sanitize_text_field($request->get_param('availability'));
