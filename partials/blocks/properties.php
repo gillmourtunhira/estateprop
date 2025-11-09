@@ -62,12 +62,11 @@ $top_content = get_sub_field('top_content');
                 </select>
             </div>
 
-            <button type="button" id="reset-filter" class="btn btn-light btn-icon border">
-                <i class="fas fa-sliders-h"></i>
-            </button>
-
             <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center px-4">
                 <i class="fas fa-search me-2"></i> SEARCH
+            </button>
+            <button type="button" id="reset-filter-button" class="btn btn-danger" style="display: none;">
+                <i class="fa-solid fa-ban"></i>
             </button>
         </form>
     </div>

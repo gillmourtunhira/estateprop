@@ -1,3 +1,6 @@
+/*
+Property Search Filters
+*/
 jQuery(document).ready(function ($) {
   // Convert price string to number
   function parsePrice(price) {
@@ -17,6 +20,7 @@ jQuery(document).ready(function ($) {
   // Handle form submission
   $("#property-filter").on("submit", function (e) {
     e.preventDefault();
+    $("#reset-filter-button").show(); // Show reset button on submission
 
     const formData = $(this).serializeArray();
     const params = {};
@@ -26,7 +30,7 @@ jQuery(document).ready(function ($) {
     });
 
     const queryString = new URLSearchParams(params).toString();
-    const apiURL = `/wp-json/properties/v1/search?${queryString}`;
+    const apiURL = `${propertiesAjax.rest_url}properties/v1/search?${queryString}`;
 
     $("#property-results").html("<p>Loading properties...</p>");
 
@@ -35,9 +39,9 @@ jQuery(document).ready(function ($) {
       method: "GET",
       dataType: "json",
       success: function (response) {
-        if (response.length > 0) {
+        if (response.properties && response.properties.length > 0) {
           let html = "";
-          response.forEach((property) => {
+          response.properties.forEach((property) => {
             // Get category info
             const categoryName = property.category?.name || "For Sale";
             const categorySlug = property.category?.slug || "for-sale";
@@ -76,12 +80,13 @@ jQuery(document).ready(function ($) {
         $("#property-results").html("<p>Error loading properties.</p>");
       },
     });
+  });
 
-    // Handle reset button
-    $("#reset-filter").on("click", function () {
-      $("#property-filter")[0].reset();
-      $("#property-filter").trigger("submit");
-    });
+  // Handle click on the new reset button
+  $("#reset-filter-button").on("click", function () {
+    $("#property-filter")[0].reset();
+    $("#property-filter").trigger("submit");
+    $(this).hide();
   });
 });
 
