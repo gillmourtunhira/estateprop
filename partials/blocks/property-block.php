@@ -42,8 +42,6 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
             <div class="col-lg-8">
                 <!-- Property Header -->
                 <div class="property-header mb-4">
-                    <?php // var_dump($price);
-                    ?>
                     <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : (($status === 'For Sale') ? 'success' : 'primary'); ?>"><?php echo $status; ?></span>
                     <h1 class="property-title mt-2"><?php the_title(); ?></h1>
                     <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
