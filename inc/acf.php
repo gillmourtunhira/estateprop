@@ -49,6 +49,17 @@ function add_agent_user_fields()
                 ],
             ],
             [
+                'key' => 'field_agent_agent_contact_form_shortcode',
+                'label' => 'Contact Form Shortcode',
+                'name' => 'agent_contact_form_shortcode',
+                'type' => 'text',
+                'instructions' => 'Enter the shortcode for the contact form to display on agent profile (e.g., [contact-form-7 id="1234" title="Contact form 1"])',
+                'required' => 0,
+                'wrapper' => [
+                    'width' => '75',
+                ],
+            ],
+            [
                 'key' => 'field_agent_bio',
                 'label' => 'Agent Bio',
                 'name' => 'agent_bio',

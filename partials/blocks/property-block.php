@@ -271,21 +271,16 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         </div>
                     </div>
 
-                    <form>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Your name">
-                        </div>
-                        <div class="mb-3">
-                            <input type="email" class="form-control" placeholder="Your mail">
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Your phone">
-                        </div>
-                        <div class="mb-3">
-                            <textarea class="form-control" rows="3" placeholder="Your message"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Send message</button>
-                    </form>
+                    <div class="agent-contact-form">
+                        <?php
+                        $agent_ct7_form = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_contact_form_shortcode', true));
+                        if ($agent_ct7_form) :
+                            echo do_shortcode($agent_ct7_form);
+                        else :
+                            echo '<p>Please contact the agent via the provided email or phone number.</p>';
+                        endif;
+                        ?>
+                    </div>
 
                     <div class="whatsapp-button">
                         <?php
@@ -298,14 +293,13 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                             $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
                             $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
                         ?>
-                            <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100 mt-3">
+                            <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100">
                                 <i class="fa-brands fa-whatsapp me-2"></i> Chat on WhatsApp
                             </a>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
