@@ -31,18 +31,7 @@ function add_agent_user_fields()
                 'label' => 'WhatsApp Number',
                 'name' => 'agent_whatsapp',
                 'type' => 'text',
-                'instructions' => 'Include country code (e.g., +263771234567)',
-                'required' => 0,
-                'wrapper' => [
-                    'width' => '50',
-                ],
-            ],
-            [
-                'key' => 'field_agent_whatsapp_link',
-                'label' => 'WhatsApp Link',
-                'name' => 'agent_whatsapp_link',
-                'type' => 'url',
-                'instructions' => 'Full WhatsApp link (e.g., https://wa.me/263771234567)',
+                'instructions' => 'Just the number without the first 0 (e.g., 771234567)',
                 'required' => 0,
                 'wrapper' => [
                     'width' => '50',

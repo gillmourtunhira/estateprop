@@ -286,6 +286,23 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Send message</button>
                     </form>
+
+                    <div class="whatsapp-button">
+                        <?php
+                        $whatsapp_phone = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_whatsapp', true));
+
+                        if ($whatsapp_phone) :
+                            $cleaned_phone = preg_replace('/\D+/', '', $whatsapp_phone); // Remove non-digit characters
+                            $property_title = get_the_title();
+                            $property_link = get_permalink();
+                            $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
+                            $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
+                        ?>
+                            <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100 mt-3">
+                                <i class="fa-brands fa-whatsapp me-2"></i> Chat on WhatsApp
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
