@@ -7,6 +7,8 @@ $description_content = get_sub_field('description_content');
 $suburb_address = get_sub_field('suburb_address');
 $price = get_sub_field('price');
 $agent_info = get_sub_field('agent_info');
+$longitude = get_sub_field('map_longitude');
+$latitude = get_sub_field('map_latitude');
 $property_details = get_sub_field('property_details');
 // Get the total area from property details repeater field
 $total_area = '';
@@ -37,19 +39,25 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
 ?>
 <section class="single-property py-5">
     <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Property Header -->
+                <div class="property-header mb-4">
+                    <div class="property-header-details">
+                        <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : (($status === 'For Sale') ? 'success' : 'primary'); ?>"><?php echo $status; ?></span>
+                        <h1 class="property-title mt-2"><?php the_title(); ?></h1>
+                        <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
+                    </div>
+                    <div class="property-price fw-bold text-dark">
+                        <h3>$<?php echo format_large_number($price); ?></h3>
+                        <span class="text-muted fs-6">/ $<?php echo calculate_price_per_sqm(intval($price), intval($total_area)); ?> per sq.m</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row align-items-start">
             <!-- Left: Main content -->
             <div class="col-lg-8">
-                <!-- Property Header -->
-                <div class="property-header mb-4">
-                    <span class="badge bg-<?php echo ($status === 'Sold') ? 'danger' : (($status === 'For Sale') ? 'success' : 'primary'); ?>"><?php echo $status; ?></span>
-                    <h1 class="property-title mt-2"><?php the_title(); ?></h1>
-                    <p class="property-location text-muted mb-2"><?php echo wp_kses_post($suburb_address); ?></p>
-                    <div class="property-price fw-bold fs-4 text-dark">
-                        $<?php echo format_large_number($price); ?> <span class="text-muted fs-6">/ $<?php echo calculate_price_per_sqm(intval($price), intval($total_area)); ?> per sq.m</span>
-                    </div>
-                </div>
-
                 <!-- Property Gallery -->
                 <div class="property-gallery mb-4">
                     <div class="row g-3">
@@ -189,7 +197,45 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         </div>
                     <?php endif; ?>
                 </div>
+                <!-- Local Anemities -->
+                <section class="local-anemities my-5">
+                    <?php
+                    $top_label = get_sub_field('local_amenities_label');
+                    $local_amenities = get_sub_field('local_amenities');
+                    ?>
+                    <div class="container px-0">
+                        <?php if ($top_label) : ?>
+                            <h5 class="fw-bold mb-4"><?php echo esc_html($top_label); ?></h5>
+                        <?php endif; ?>
 
+                        <?php if ($local_amenities) : ?>
+
+                            <?php
+                            foreach ($local_amenities as $amenity) :
+                            ?>
+                                <div class="category mb-4">
+                                    <h6 class="fw-semibold mb-3">
+                                        <i class="fa-solid fa-<?= $amenity['amenity_category_icon'] ?> me-2 text-secondary"></i> <?= $amenity['amenity_category_label'] ?>
+                                    </h6>
+                                    <?php
+                                    if ($amenity['amenity_items']) : ?>
+                                        <ul class="list-unstyled mb-0">
+                                            <?php foreach ($amenity['amenity_items'] as $item) : ?>
+                                                <li class="d-flex justify-content-between border-bottom py-2">
+                                                    <span><?= esc_attr__($item['amenity_name']) ?></span>
+                                                    <span class="text-muted"><?= esc_attr__($item['amenity_distance']) ?> km(s)</span>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+                                </div>
+                            <?php
+                            endforeach;
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                </section>
+                <!-- End Local Anemities-->
             </div>
 
             <!-- Right: Contact Agent -->
@@ -241,11 +287,24 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                     </div>
 
                 </div>
-                <div class="col-12 my-4 d-none">
-                    <div class="small-map rounded-4 overflow-hidden">
-                        <img src="https://picsum.photos/id/57/400/200?text=Map" class="img-fluid w-100" alt="Map preview">
+                <!-- Map -->
+                <?php if (!empty($latitude && $longitude)) :
+                    $api_key = crafted_get_google_maps_api_key();
+                ?>
+                    <div class="col-12 my-4">
+                        <div class="small-map rounded-4 overflow-hidden">
+                            <iframe
+                                width="100%"
+                                height="250"
+                                style="border:0"
+                                loading="lazy"
+                                allowfullscreen
+                                src="https://www.google.com/maps/embed/v1/view?key=<?php echo esc_attr($api_key); ?>&center=<?php echo esc_attr($latitude); ?>,<?php echo esc_attr($longitude); ?>&zoom=14&maptype=roadmap">
+                            </iframe>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
+                <!-- End Map -->
                 <div class="contact-agent bg-dark text-white my-4 p-4 rounded-4">
                     <h5 class="mb-4">Contact agent</h5>
                     <div class="agent-info d-flex align-items-center mb-4">

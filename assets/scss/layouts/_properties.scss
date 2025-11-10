@@ -92,10 +92,31 @@
 
 // Single Property Page Styles
 .single-property {
-    .property-header .badge {
-        font-size: 0.875rem;
-        padding: 0.4rem 0.75rem;
-        border-radius: 6px;
+    .property-header {
+        display: grid;
+        grid-template-columns: 0.8fr 0.2fr;
+        align-items: center;
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+            row-gap: 1rem;
+        }
+
+        .badge {
+            font-size: 0.875rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+        }
+
+        .property-price {
+            line-height: 0em;
+            text-align: right;
+
+            h3 {
+                font-size: 2.5rem;
+                font-weight: 700;
+            }
+        }
     }
 
     .property-title {
