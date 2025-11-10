@@ -38,3 +38,11 @@ jQuery(document).ready(function ($) {
     );
   });
 });
+
+// Remove p tag from content in a div and return the content only
+jQuery(document).ready(function ($) {
+  $("#submit-btn p").each(function () {
+    var content = $(this).html();
+    $(this).parent().html(content);
+  });
+});

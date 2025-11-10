@@ -32,6 +32,7 @@ function crafted_register_settings()
     register_setting('crafted_options', 'crafted_social_youtube');
     register_setting('crafted_options', 'crafted_copyright');
     register_setting('crafted_options', 'crafted_newsletter_shortcode');
+    register_setting('crafted_options', 'crafted_google_maps_api_key');
     register_setting('crafted_options', 'crafted_related_posts_content_title');
     register_setting('crafted_options', 'crafted_related_posts_content');
 }
@@ -248,6 +249,20 @@ function crafted_render_options_page()
                         <p class="description">Paste your newsletter form shortcode here.</p>
                     </td>
                 </tr>
+                <!-- Google Maps API Key -->
+                <tr>
+                    <th scope="row">
+                        <label for="crafted_google_maps_api_key">Google Maps API Key</label>
+                    </th>
+                    <td>
+                        <input type="text"
+                            id="crafted_google_maps_api_key"
+                            name="crafted_google_maps_api_key"
+                            value="<?php echo esc_attr(get_option('crafted_google_maps_api_key')); ?>"
+                            class="regular-text">
+                        <p class="description">Enter your Google Maps API key for map functionalities.</p>
+                    </td>
+                </tr>
             </table>
 
             <?php submit_button(); ?>
@@ -306,6 +321,11 @@ function crafted_get_copyright()
 function crafted_get_newsletter_shortcode()
 {
     return get_option('crafted_newsletter_shortcode');
+}
+
+function crafted_get_google_maps_api_key()
+{
+    return esc_attr(get_option('crafted_google_maps_api_key'));
 }
 
 // Example usage in your theme templates:

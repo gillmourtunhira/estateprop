@@ -92,10 +92,31 @@
 
 // Single Property Page Styles
 .single-property {
-    .property-header .badge {
-        font-size: 0.875rem;
-        padding: 0.4rem 0.75rem;
-        border-radius: 6px;
+    .property-header {
+        display: grid;
+        grid-template-columns: 0.8fr 0.2fr;
+        align-items: center;
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+            row-gap: 1rem;
+        }
+
+        .badge {
+            font-size: 0.875rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+        }
+
+        .property-price {
+            line-height: 0em;
+            text-align: right;
+
+            h3 {
+                font-size: 2.5rem;
+                font-weight: 700;
+            }
+        }
     }
 
     .property-title {
@@ -240,6 +261,44 @@
                 height: 60px;
                 object-fit: cover;
                 /* margin-right: 1rem; */
+            }
+        }
+
+        .agent-contact-form {
+            form {
+                input[type="text"],
+                input[type="email"],
+                input[type="tel"],
+                input[type="submit"],
+                textarea {
+                    border-radius: 8px;
+                    border: none;
+                    padding: 0.75rem;
+                    display: block;
+                    width: 100%;
+                    appearance: none;
+                    outline: none;
+
+                    &:focus {
+                        box-shadow: none;
+                        outline: none;
+                    }
+                }
+
+                input[type="submit"] {
+                    background: #0056d2;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 0.75rem;
+                    font-weight: 600;
+                    color: #fff;
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+
+                    &:hover {
+                        background: #0041a8;
+                    }
+                }
             }
         }
     }
