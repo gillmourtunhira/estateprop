@@ -211,35 +211,35 @@ return [
                             "name" => "amenity_name",
                             "label" => "Name",
                             "type" => "text",
-                            "required" => 1,
+                            "required" => 0,
                         ],
                         [
                             "key" => "crafted_layout_property_amenity_distance",
                             "name" => "amenity_distance",
                             "label" => "Distance (km)",
                             "type" => "number",
-                            "required" => 1,
+                            "required" => 0,
                         ],
                     ],
                     "button_label" => "Add Item",
-                    "min" => 1,
+                    "min" => 0,
                     "max" => 3,
                 ],
             ],
             "button_label" => "Add Amenity",
-            "min" => 1,
+            "min" => 0,
             "max" => 4,
         ],
         [
-            "key" => "crafted_layout_property_map_coordinates_option",
-            "name" => "map_coordinates_option",
+            "key" => "crafted_layout_property_map_option",
+            "name" => "map_option",
             "type" => "true_false",
             "label" => "Map Option",
-            "instructions" => "Toggle to use location coordinates or Google Maps",
+            "instructions" => "Toggle to show property on Google Maps",
             "ui" => 1,
-            "ui_on_text" => "Coordinates",
-            "ui_off_text" => "Map",
-            "default_value" => "1",
+            "ui_on_text" => "Yes",
+            "ui_off_text" => "No",
+            "default_value" => "0",
         ],
         [
             "key" => "crafted_layout_property_map_longitude",
@@ -253,7 +253,7 @@ return [
             "conditional_logic" => [
                 [
                     [
-                        "field" => "crafted_layout_property_map_coordinates_option",
+                        "field" => "crafted_layout_property_map_option",
                         "operator" => "==",
                         "value" => "1",
                     ],
@@ -272,28 +272,12 @@ return [
             "conditional_logic" => [
                 [
                     [
-                        "field" => "crafted_layout_property_map_coordinates_option",
+                        "field" => "crafted_layout_property_map_option",
                         "operator" => "==",
                         "value" => "1",
                     ],
                 ],
             ],
-        ],
-        [
-            "key" => "crafted_layout_property_google_map",
-            "name" => "google_map",
-            "label" => "Google Map",
-            "type" => "google_map",
-            "required" => 0,
-            "conditional_logic" => [
-                [
-                    [
-                        "field" => "crafted_layout_property_map_coordinates_option",
-                        "operator" => "!=",
-                        "value" => "1",
-                    ]
-                ]
-            ]
         ],
         [
             "key" => "crafted_layout_property_agent_info",
