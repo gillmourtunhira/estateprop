@@ -13,6 +13,7 @@ jQuery(document).ready(function ($) {
       sold: "danger",
       "for-rent": "primary",
       "for-sale": "success",
+      wanted: "warning",
     };
     return colors[categorySlug] || "success";
   }
