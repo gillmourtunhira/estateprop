@@ -136,7 +136,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                                     </div>
                                     <div>
                                         <strong><?php
-                                                echo (is_bool($parking) ? 'Yes' : 'No');
+                                                echo ($parking ? 'Yes' : 'No');
                                                 ?>
                                         </strong>
                                     </div>
@@ -166,7 +166,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                                     </div>
                                     <div>
                                         <strong><?php
-                                                echo (is_bool($wifi) ? 'Yes' : 'No');
+                                                echo ($wifi ? 'Yes' : 'No');
                                                 ?></strong>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                                     </div>
                                     <div>
                                         <strong><?php
-                                                echo (is_bool($cable_tv) ? 'Yes' : 'No');
+                                                echo ($cable_tv ? 'Yes' : 'No');
                                                 ?></strong>
                                     </div>
                                 </div>
@@ -208,7 +208,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                             <h5 class="fw-bold mb-4"><?php echo esc_html($top_label); ?></h5>
                         <?php endif; ?>
 
-                        <?php if ($local_amenities) : ?>
+                        <?php if (!empty($local_amenities) && is_array($local_amenities)) : ?>
 
                             <?php
                             foreach ($local_amenities as $amenity) :
@@ -218,7 +218,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                                         <i class="fa-solid fa-<?= $amenity['amenity_category_icon'] ?> me-2 text-secondary"></i> <?= $amenity['amenity_category_label'] ?>
                                     </h6>
                                     <?php
-                                    if ($amenity['amenity_items']) : ?>
+                                    if (!empty($amenity['amenity_items']) && is_array($amenity['amenity_items'])) : ?>
                                         <ul class="list-unstyled mb-0">
                                             <?php foreach ($amenity['amenity_items'] as $item) : ?>
                                                 <li class="d-flex justify-content-between border-bottom py-2">
