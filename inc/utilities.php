@@ -90,30 +90,6 @@ function register_properties_rest_route()
 }
 add_action('rest_api_init', 'register_properties_rest_route');
 
-
-// Modern REST API Endpoint for Property Search
-add_action('rest_api_init', function () {
-    register_rest_route('properties/v1', '/search', [
-        'methods'             => WP_REST_Server::READABLE,
-        'callback'            => 'crafted_get_properties',
-        'permission_callback' => 'check_same_domain_permission',
-        'args' => [
-            'category'      => ['required' => false, 'type' => 'string'],
-            'property_type' => ['required' => false, 'type' => 'array'],
-            'location'      => ['required' => false, 'type' => 'string'],
-            'search'        => ['required' => false, 'type' => 'string'],
-            'bedrooms'      => ['required' => false, 'type' => 'string'],
-            'availability'  => ['required' => false, 'type' => 'string'],
-            'price_min'     => ['required' => false, 'type' => 'integer'],
-            'price_max'     => ['required' => false, 'type' => 'integer'],
-            'per_page'      => ['required' => false, 'type' => 'integer', 'default' => 6],
-            'page'          => ['required' => false, 'type' => 'integer', 'default' => 1],
-            'exclude_id'    => ['required' => false, 'type' => 'integer', 'default' => 0],
-        ],
-    ]);
-});
-
-
 /**
  * Check REST API permissions.
  *
@@ -167,7 +143,7 @@ function get_properties_data($request)
 
     $args = array(
         'post_type' => 'properties',
-        'posts_per_page' => 5,
+        'posts_per_page' => -1,
         'post_status' => 'publish',
     );
 
@@ -183,7 +159,7 @@ function get_properties_data($request)
             $property_data = array(
                 'id' => $property_id->ID,
                 'title' => get_the_title($property_id->ID),
-                'image' => get_the_post_thumbnail_url($property_id->ID, 'medium'),
+                'image' => get_the_post_thumbnail_url($property_id->ID, 'large'),
                 'permalink' => get_permalink($property_id->ID),
             );
 
@@ -351,7 +327,7 @@ function crafted_get_properties(WP_REST_Request $request)
         $property = [
             'id'        => $id,
             'title'     => get_the_title($id),
-            'image'     => get_the_post_thumbnail_url($id, 'medium'),
+            'image'     => get_the_post_thumbnail_url($id, 'large'),
             'permalink' => get_permalink($id),
         ];
 

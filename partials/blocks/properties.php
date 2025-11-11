@@ -1,5 +1,6 @@
 <?php
 $top_content = get_sub_field('top_content');
+$number_of_posts = get_sub_field('number_of_properties');
 ?>
 <section class="properties-grid my-5">
     <!-- Properties Filter -->
@@ -86,7 +87,7 @@ $top_content = get_sub_field('top_content');
             } else {
                 $post_id = '';
             }
-            echo do_shortcode('[properties_cards number_of_properties="' . esc_attr(get_sub_field('number_of_properties')) . '" post_id="' . esc_attr($post_id) . '"]');
+            echo do_shortcode('[properties_cards number_of_properties="' . esc_attr($number_of_posts) . '" post_id="' . esc_attr($post_id) . '"]');
             ?>
         </div>
     </div>

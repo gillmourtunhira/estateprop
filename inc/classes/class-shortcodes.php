@@ -157,6 +157,9 @@ class CraftedTheme_Shortcodes
                                     case 'for rent':
                                         $term_badge_color = 'bg-primary';
                                         break;
+                                    case 'wanted':
+                                        $term_badge_color = 'bg-warning text-dark';
+                                        break;
                                     default:
                                         $term_badge_color = 'bg-success';
                                         break;
