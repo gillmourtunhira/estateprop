@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Stats Block
  */
@@ -26,6 +27,47 @@ return [
             'type' => 'wysiwyg',
             'required' => 0,
             'media_upload' => 0
+        ],
+        [
+            'key' => 'crafted_layout_stats_items',
+            'name' => 'items',
+            'label' => 'Stats Items',
+            'type' => 'repeater',
+            'layout' => 'block',
+            'required' => 0,
+
+            'sub_fields' => [
+                [
+                    'key' => 'crafted_layout_stats_item_icon',
+                    'name' => 'icon',
+                    'label' => 'Icon',
+                    'type' => 'text',
+                    'required' => 0,
+                    'wrapper' => [
+                        'width' => '25',
+                    ],
+                ],
+                [
+                    'key' => 'crafted_layout_stats_item_number',
+                    'name' => 'number',
+                    'label' => 'Number',
+                    'type' => 'number',
+                    'required' => 0,
+                    'wrapper' => [
+                        'width' => '25',
+                    ],
+                ],
+                [
+                    'key' => 'crafted_layout_stats_item_label',
+                    'name' => 'label',
+                    'label' => 'Label',
+                    'type' => 'text',
+                    'required' => 0,
+                    'wrapper' => [
+                        'width' => '50',
+                    ],
+                ],
+            ],
         ],
     ],
 ];
