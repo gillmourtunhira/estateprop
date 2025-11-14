@@ -41,6 +41,13 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            background-color: #1e3f7c;
+            border: 1px solid #1e3f7c;
+
+            &:hover {
+                background-color: darken(#1e3f7c, 8%);
+                border-color: darken(#1e3f7c, 8%);
+            }
         }
 
         .filter-box select:focus,

@@ -1,6 +1,6 @@
 // _variables.scss - Define your color scheme and breakpoints
-$primary-color: #20c997;
-$primary-hover: #1ba085;
+$primary-color: #1e3f7c;
+$primary-hover: #87c65f;
 $text-color: #333;
 $text-muted: #666;
 $border-color: #dee2e6;
@@ -38,8 +38,8 @@ $nav-font-weight: 500;
 }
 
 // Main navbar styles
-body:not(.home){
-    .custom-navbar{
+body:not(.home) {
+    .custom-navbar {
         position: relative;
         top: 0;
     }
@@ -81,7 +81,7 @@ body:not(.home){
                 // Active/current page styling
                 &.current-menu-item,
                 &.current_page_item {
-                    color: $primary-color !important;
+                    /* color: $primary-color !important; */
                     position: relative;
 
                     /* &::after {
@@ -269,7 +269,7 @@ body:not(.home){
 // Dark mode support (optional)
 @media (prefers-color-scheme: dark) {
     .custom-navbar {
-        background-color: #1a1a1a;
+        /* background-color: #1a1a1a; */
 
         .navbar-brand,
         .nav-link {
