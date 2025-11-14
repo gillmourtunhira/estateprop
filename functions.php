@@ -132,6 +132,14 @@ function crafted_setup()
 }
 add_action("after_setup_theme", "crafted_setup");
 
+function remove_features()
+{
+    // Remove featured image on pages in editor
+    remove_post_type_support("page", "thumbnail");
+    remove_post_type_support("page", "page-attributes");
+}
+add_action("init", "remove_features");
+
 // SVG support
 function add_svg_support($file_types)
 {

@@ -69,7 +69,6 @@ return [
             "choices" => [
                 "left" => "Left",
                 "center" => "Center",
-                "right" => "Right",
             ],
             "default_value" => "left",
             "wrapper" => [

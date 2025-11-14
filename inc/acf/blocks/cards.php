@@ -15,7 +15,7 @@ return [
             'type' => 'text',
             'required' => 0,
             'wrapper' => [
-              'width' => '30',
+                'width' => '30',
             ],
         ],
         [
@@ -107,6 +107,8 @@ return [
                     ],
                 ],
             ],
+            'min' => 0,
+            'max' => 3,
         ],
     ]
 ];
