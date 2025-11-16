@@ -44,6 +44,13 @@ body:not(.home) {
         top: 0;
     }
 }
+
+header.site-header {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+}
+
 .custom-navbar {
     background-color: $white;
     box-shadow: $shadow-sm;
@@ -252,8 +259,8 @@ body:not(.home) {
 .btn-close:focus,
 .nav-link:focus,
 .btn-get-started:focus {
-    outline: 2px solid $primary-color;
-    outline-offset: 2px;
+    /* outline: 2px solid $primary-color;
+    outline-offset: 2px; */
 }
 
 // Animation for mobile drawer
