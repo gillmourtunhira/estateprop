@@ -57,7 +57,7 @@ get_header();
                     </div>
 
                     <!-- Availability -->
-                    <div class="filter-group mb-4 d-none">
+                    <div class="filter-group mb-4">
                         <h5 class="filter-title">Availability</h5>
                         <div class="filter-options">
                             <label><input type="radio" name="availability" value="ready"> Ready to Move</label>

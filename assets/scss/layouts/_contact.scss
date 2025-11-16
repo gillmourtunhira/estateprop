@@ -34,6 +34,7 @@
         justify-content: space-between;
 
         @media screen and (max-width: 992px) {
+            grid-template-columns: 1fr;
             grid-template-areas:
                 "contact_content"
                 "contact_form";

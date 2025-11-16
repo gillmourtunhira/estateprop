@@ -143,7 +143,7 @@ endif;
 
                         <?php if ($social['x']): ?>
                             <a href="<?php echo esc_url($social['x']); ?>" target="_blank" rel="noopener" aria-label="X">
-                                <i class="fab fa-x-twitter"></i>
+                                <i class="fab fa-twitter"></i>
                             </a>
                         <?php endif; ?>
 

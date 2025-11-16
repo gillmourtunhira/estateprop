@@ -252,8 +252,8 @@ body:not(.home) {
 .btn-close:focus,
 .nav-link:focus,
 .btn-get-started:focus {
-    outline: 2px solid $primary-color;
-    outline-offset: 2px;
+    /* outline: 2px solid $primary-color;
+    outline-offset: 2px; */
 }
 
 // Animation for mobile drawer
