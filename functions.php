@@ -101,6 +101,7 @@ function crafted_setup()
     register_nav_menus([
         "primary" => esc_html__("Primary Menu", "crafted-theme"),
         "footer" => esc_html__("Footer Menu", "crafted-theme"),
+        "properties" => esc_html__("Properties Menu", "crafted-theme"),
     ]);
 
     // HTML5 support

@@ -95,6 +95,13 @@ jQuery(document).ready(function ($) {
 Property Archive Filters
 */
 jQuery(function ($) {
+  // Check for location parameter in URL on page load
+  const urlParams = new URLSearchParams(window.location.search);
+  const locationParam = urlParams.get("location");
+  if (locationParam) {
+    $("#property-search").val(locationParam);
+  }
+
   const $form = $("#property-filter-form");
   const $search = $("#property-search");
   const $grid = $("#properties-grid");

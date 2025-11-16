@@ -44,6 +44,13 @@ body:not(.home) {
         top: 0;
     }
 }
+
+header.site-header {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+}
+
 .custom-navbar {
     background-color: $white;
     box-shadow: $shadow-sm;

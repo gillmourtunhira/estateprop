@@ -46,3 +46,13 @@ jQuery(document).ready(function ($) {
     $(this).parent().html(content);
   });
 });
+
+// Handle click event on location cards
+jQuery(document).ready(function ($) {
+  $(".locations-grid").on("click", ".location-card", function () {
+    const url = $(this).data("url");
+    if (url) {
+      window.location.href = url;
+    }
+  });
+});
