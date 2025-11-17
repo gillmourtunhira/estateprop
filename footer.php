@@ -80,23 +80,27 @@ endif;
             <!-- Property Links -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="footer-heading">Property</h5>
-                <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/apartments')); ?>">Apartments</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/villas')); ?>">Villa's</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/houses')); ?>">Houses</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/commercial')); ?>">Commercial</a></li>
-                </ul>
+                <?php
+                wp_nav_menu(array(
+                    'theme_location' => 'properties',
+                    'container' => false,
+                    'menu_class' => 'footer-links',
+                    'fallback_cb' => false,
+                ));
+                ?>
             </div>
 
             <!-- General Links -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="footer-heading">Links</h5>
-                <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/property')); ?>">Property</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about')); ?>">About</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/contact')); ?>">Contact</a></li>
-                </ul>
+                <?php
+                wp_nav_menu(array(
+                    'theme_location' => 'footer',
+                    'container' => false,
+                    'menu_class' => 'footer-links',
+                    'fallback_cb' => false,
+                ));
+                ?>
             </div>
 
             <!-- Newsletter -->
@@ -124,9 +128,9 @@ endif;
                 <div class="col-md-6">
                     <p class="copyright mb-0">
                         <?php if (crafted_get_copyright()): ?>
-                            <?php echo wp_kses_post(crafted_get_copyright()); ?>
+                            <?php echo '&copy; Copyright ' . date('Y ') . wp_kses_post(crafted_get_copyright()); ?>
                         <?php else: ?>
-                            &copy;Copyright Real Estate <?php echo date('Y'); ?>. Design by Figma.guru
+                            &copy;Copyright Real Estate <?php echo date('Y'); ?>. Developed by <a href="https://gillmour.com" target="_blank" rel="noopener">GILLMOUR</a>.
                         <?php endif; ?>
                     </p>
                 </div>
