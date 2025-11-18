@@ -287,6 +287,47 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                     </div>
 
                 </div>
+                <!--Share Button Grey background-->
+                <div class="share-button my-3 rounded-4 p-3 bg-light d-flex align-items-center justify-content-center border border-success">
+                    <?php
+                    $property_title = get_the_title();
+                    $property_link = get_permalink();
+                    $share_text = rawurlencode("Check out this property: {$property_title} - {$property_link}");
+                    $twitter_share_link = 'https://twitter.com/intent/tweet?text=' . $share_text;
+                    $facebook_share_link = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($property_link);
+                    $linkedin_share_link = 'https://www.linkedin.com/sharing/share-offsite/?url=' . rawurlencode($property_link);
+                    ?>
+                    <span class="me-2">Share:</span>
+                    <div class="share-links d-flex gap-2">
+                        <a href="<?php echo esc_url($twitter_share_link); ?>" target="_blank" class="me-2">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="<?php echo esc_url($facebook_share_link); ?>" target="_blank">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="<?php echo esc_url($linkedin_share_link); ?>" target="_blank" class="ms-2">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                <!--Whatsapp Button-->
+                <div class="whatsapp-button my-3">
+                    <?php
+                    $whatsapp_phone = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_whatsapp', true));
+
+                    if ($whatsapp_phone) :
+                        $cleaned_phone = preg_replace('/\D+/', '', $whatsapp_phone); // Remove non-digit characters
+                        $property_title = get_the_title();
+                        $property_link = get_permalink();
+                        $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
+                        $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
+                    ?>
+                        <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Chat on WhatsApp
+                        </a>
+                    <?php endif; ?>
+                </div>
+                <!--End Whatsapp Button-->
                 <!-- Map -->
                 <?php if (!empty($latitude && $longitude)) :
                     $api_key = crafted_get_google_maps_api_key();
@@ -340,47 +381,8 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         endif;
                         ?>
                     </div>
-
-                    <div class="whatsapp-button">
-                        <?php
-                        $whatsapp_phone = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_whatsapp', true));
-
-                        if ($whatsapp_phone) :
-                            $cleaned_phone = preg_replace('/\D+/', '', $whatsapp_phone); // Remove non-digit characters
-                            $property_title = get_the_title();
-                            $property_link = get_permalink();
-                            $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
-                            $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
-                        ?>
-                            <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100">
-                                <i class="fa-brands fa-whatsapp me-2"></i> Chat on WhatsApp
-                            </a>
-                        <?php endif; ?>
-                    </div>
                 </div>
-                <!--Share Button Grey background-->
-                <div class="share-button mt-3 rounded-4 p-3 bg-light d-flex align-items-center justify-content-center border border-success">
-                    <?php
-                    $property_title = get_the_title();
-                    $property_link = get_permalink();
-                    $share_text = rawurlencode("Check out this property: {$property_title} - {$property_link}");
-                    $twitter_share_link = 'https://twitter.com/intent/tweet?text=' . $share_text;
-                    $facebook_share_link = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($property_link);
-                    $linkedin_share_link = 'https://www.linkedin.com/sharing/share-offsite/?url=' . rawurlencode($property_link);
-                    ?>
-                    <span class="me-2">Share:</span>
-                    <div class="share-links d-flex gap-2">
-                        <a href="<?php echo esc_url($twitter_share_link); ?>" target="_blank" class="me-2">
-                            <i class="fa-brands fa-twitter"></i>
-                        </a>
-                        <a href="<?php echo esc_url($facebook_share_link); ?>" target="_blank">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="<?php echo esc_url($linkedin_share_link); ?>" target="_blank" class="ms-2">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
