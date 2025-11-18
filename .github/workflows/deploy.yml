@@ -31,11 +31,14 @@ jobs:
           node-version: "20"
           cache: "yarn"
 
+      - name: 🧶 Use Yarn 4
+        run: corepack prepare yarn@4.9.2 --activate
+
       - name: 📦 Ensure Yarn is available
-        run: npm install -g yarn
+        run: yarn --version
 
       - name: 📥 Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: 🛠 Build Assets
         run: yarn gulp build
