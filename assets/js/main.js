@@ -55,4 +55,53 @@ jQuery(document).ready(function ($) {
       window.location.href = url;
     }
   });
+
+  // Create and add scroll to top button
+  const $scrollBtn = $("<button>")
+    .html('<i class="fas fa-arrow-up"></i>')
+    .addClass("scroll-to-top")
+    .css({
+      position: "fixed",
+      bottom: "20px",
+      right: "20px",
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      backgroundColor: "#87c65f",
+      color: "white",
+      border: "none",
+      cursor: "pointer",
+      opacity: "0",
+      visibility: "hidden",
+      transition: "all 0.3s ease",
+      zIndex: "1000",
+      boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+    });
+
+  $("body").append($scrollBtn);
+
+  // Show/hide scroll button based on scroll position
+  $(window).on("scroll", function () {
+    if ($(window).scrollTop() > 300) {
+      $scrollBtn.css({
+        opacity: "1",
+        visibility: "visible",
+      });
+    } else {
+      $scrollBtn.css({
+        opacity: "0",
+        visibility: "hidden",
+      });
+    }
+  });
+
+  // Scroll to top functionality
+  $scrollBtn.on("click", function () {
+    $("html, body").animate(
+      {
+        scrollTop: 0,
+      },
+      800,
+    );
+  });
 });
