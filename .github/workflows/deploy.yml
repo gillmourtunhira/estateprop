@@ -68,7 +68,7 @@ jobs:
       # 🚀 Deploy
       # ---------------------------------------------
       - name: 🚀 Deploy Theme
-        uses: SamKirkland/web-deploy@v1
+        uses: SamKirkland/web-deploy@v4.1.0
         with:
           target-server: elideproperty.co.zw
           remote-user: elidepro
