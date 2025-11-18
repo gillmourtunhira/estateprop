@@ -29,20 +29,44 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
-          cache: "yarn"
 
-      - name: 🧶 Use Yarn 4
+      # ---------------------------------------------
+      # 🧶 Use Yarn 4.9.2 (same as local)
+      # ---------------------------------------------
+      - name: 🧶 Enable Yarn 4.9.2 via Corepack
         run: corepack prepare yarn@4.9.2 --activate
 
-      - name: 📦 Ensure Yarn is available
+      - name: 📦 Verify Yarn version
         run: yarn --version
 
+      # ---------------------------------------------
+      # ⚡️ Cache Yarn 4 dependencies
+      # ---------------------------------------------
+      - name: ♻️ Cache Yarn 4 Offline Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+          key: yarn4-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn4-
+
+      # ---------------------------------------------
+      # 📥 Install dependencies (fast with cache)
+      # ---------------------------------------------
       - name: 📥 Install Dependencies
         run: yarn install --immutable
 
+      # ---------------------------------------------
+      # 🛠 Build assets
+      # ---------------------------------------------
       - name: 🛠 Build Assets
         run: yarn gulp build
 
+      # ---------------------------------------------
+      # 🚀 Deploy
+      # ---------------------------------------------
       - name: 🚀 Deploy Theme
         uses: SamKirkland/web-deploy@v1
         with:
