@@ -41,20 +41,64 @@ add_action('wp_ajax_nopriv_load_more_posts', 'load_more_posts_ajax');
 // Add User Role Agent and Property Capabilities
 function add_agent_role_and_capabilities()
 {
-    // Add 'Agent' role if it doesn't exist
+
+    // Create Agent role if not exists
     if (!get_role('agent')) {
-        add_role('agent', 'Agent', array(
-            'read' => true,
-            'edit_properties' => true,
-            'publish_properties' => true,
-            'edit_published_properties' => true,
-            'delete_properties' => true,
-            'delete_published_properties' => true,
-            'upload_files' => true,
-        ));
+        add_role('agent', 'Agent', ['read' => true]);
+    }
+
+    $roles = ['agent', 'administrator'];
+
+    // All CPT capabilities
+    $caps = [
+        'read',
+        'read_property',
+        'read_private_properties',
+
+        'edit_property',
+        'edit_properties',
+        'edit_others_properties',
+        'edit_published_properties',
+
+        'publish_properties',
+
+        'delete_property',
+        'delete_properties',
+        'delete_others_properties',
+        'delete_published_properties',
+
+        'upload_files',
+
+        // Property Category
+        'manage_property_categories',
+        'edit_property_categories',
+        'delete_property_categories',
+        'assign_property_categories',
+
+        // Property Type
+        'manage_property_types',
+        'edit_property_types',
+        'delete_property_types',
+        'assign_property_types',
+
+        // Property Location
+        'manage_property_locations',
+        'edit_property_locations',
+        'delete_property_locations',
+        'assign_property_locations',
+    ];
+
+    foreach ($roles as $role_key) {
+        $role = get_role($role_key);
+        if (!$role) continue;
+
+        foreach ($caps as $cap) {
+            $role->add_cap($cap);
+        }
     }
 }
 add_action('init', 'add_agent_role_and_capabilities');
+
 
 // Function to put a decimal point in large numbers
 // E.g., 1000000 becomes 1.000.000

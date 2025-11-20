@@ -59,9 +59,18 @@ function register_properties_post_type()
         'has_archive'           => true,
         'exclude_from_search'   => false,
         'publicly_queryable'    => true,
-        'capability_type'       => 'post',
+        'capability_type' => ['property', 'properties'],
+        'map_meta_cap' => true,
         'show_in_rest'          => true, // Enable Gutenberg editor
         'rewrite'               => array('slug' => 'properties'),
+
+        // ⭐ Custom taxonomy capabilities
+        'capabilities'  => array(
+            'manage_terms' => 'manage_property_categories',
+            'edit_terms'   => 'edit_property_categories',
+            'delete_terms' => 'delete_property_categories',
+            'assign_terms' => 'assign_property_categories',
+        ),
     );
 
     register_post_type('properties', $args);
@@ -105,6 +114,14 @@ function register_property_category_taxonomy()
         'show_tagcloud'              => true,
         'show_in_rest'               => true,
         'rewrite'                    => array('slug' => 'property-category'),
+
+        // ▶ Custom taxonomy caps
+        'capabilities' => array(
+            'manage_terms' => 'manage_property_categories',
+            'edit_terms'   => 'edit_property_categories',
+            'delete_terms' => 'delete_property_categories',
+            'assign_terms' => 'assign_property_categories',
+        ),
     );
 
     register_taxonomy('property_category', array('properties'), $args);
@@ -148,6 +165,14 @@ function register_property_type_taxonomy()
         'show_tagcloud'              => true,
         'show_in_rest'               => true,
         'rewrite'                    => array('slug' => 'property-type'),
+
+        // ▶ Custom taxonomy caps
+        'capabilities' => array(
+            'manage_terms' => 'manage_property_types',
+            'edit_terms'   => 'edit_property_types',
+            'delete_terms' => 'delete_property_types',
+            'assign_terms' => 'assign_property_types',
+        ),
     );
 
     register_taxonomy('property_type', array('properties'), $args);
@@ -191,6 +216,14 @@ function register_property_location_taxonomy()
         'show_tagcloud'              => true,
         'show_in_rest'               => true,
         'rewrite'                    => array('slug' => 'location'),
+
+        // ▶ Custom taxonomy caps
+        'capabilities' => array(
+            'manage_terms' => 'manage_property_locations',
+            'edit_terms'   => 'edit_property_locations',
+            'delete_terms' => 'delete_property_locations',
+            'assign_terms' => 'assign_property_locations',
+        ),
     );
 
     register_taxonomy('property_location', array('properties'), $args);

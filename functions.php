@@ -279,3 +279,52 @@ function crafted_login_logo_url()
     return home_url();
 }
 add_filter('login_headerurl', 'crafted_login_logo_url');
+
+/**
+ * Save agent from property-block to post meta
+ */
+// add_action('acf/save_post', 'save_agent_as_meta', 20);
+// function save_agent_as_meta($post_id)
+// {
+
+//     if (isset($_POST['acf']['crafted_layout_property_block'])) {
+//         $agent_id = $_POST['acf']['crafted_layout_property_block']['agent_info'];
+//         update_post_meta($post_id, '_property_agent_id', $agent_id);
+//     }
+// }
+
+/**
+ * Limit Properties list in admin to only show posts assigned to the Agent
+ */
+// add_action('pre_get_posts', 'filter_properties_by_assigned_agent');
+// function filter_properties_by_assigned_agent($query)
+// {
+
+//     // Only modify admin PROPERTY LIST screen
+//     if (is_admin() && $query->is_main_query() && $query->get('post_type') === 'properties') {
+
+//         // Allow admin to see all properties
+//         if (current_user_can('administrator')) {
+//             return;
+//         }
+
+//         // Only affect agents
+//         if (current_user_can('agent')) {
+
+//             $user_id = get_current_user_id();
+
+//             // Debug log
+//             error_log('Filtering properties for agent user ID: ' . $user_id);
+
+//             // ACF stores the user ID as meta_value
+//             $query->set('meta_query', [
+//                 [
+//                     'key'     => 'crafted_layout_property_agent_info',   // ACF saves user ID here
+//                     'value'   => $user_id,
+//                     'compare' => '=',
+//                     'type'    => 'NUMERIC',
+//                 ]
+//             ]);
+//         }
+//     }
+// }

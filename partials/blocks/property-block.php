@@ -7,6 +7,7 @@ $description_content = get_sub_field('description_content');
 $suburb_address = get_sub_field('suburb_address');
 $price = get_sub_field('price');
 $agent_info = get_sub_field('agent_info');
+$map_option = get_sub_field('map_option');
 $longitude = get_sub_field('map_longitude');
 $latitude = get_sub_field('map_latitude');
 $property_details = get_sub_field('property_details');
@@ -349,7 +350,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                     </div>
                 </div>
                 <!-- Map -->
-                <?php if (!empty($latitude && $longitude)) :
+                <?php if ($map_option && !empty($latitude && $longitude)) :
                     $api_key = crafted_get_google_maps_api_key();
                 ?>
                     <div class="col-12 my-4">

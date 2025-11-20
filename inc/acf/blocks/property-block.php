@@ -249,7 +249,7 @@ return [
             "wrapper" => [
                 "width" => "50",
             ],
-            "required" => 0,
+            "required" => 1,
             "conditional_logic" => [
                 [
                     [
@@ -268,7 +268,7 @@ return [
             "wrapper" => [
                 "width" => "50",
             ],
-            "required" => 0,
+            "required" => 1,
             "conditional_logic" => [
                 [
                     [
@@ -282,11 +282,9 @@ return [
         [
             "key" => "crafted_layout_property_agent_info",
             "name" => "agent_info",
-            "label" => "Agent Info",
+            "label" => "Assign Agent",
             "type" => "user",
             "role" => [
-                "administrator",
-                "editor",
                 "agent",
             ],
             "return_format" => "array",
