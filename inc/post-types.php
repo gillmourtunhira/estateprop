@@ -223,9 +223,12 @@ function add_default_property_terms()
     if (!term_exists('Sold', 'property_category')) {
         wp_insert_term('Sold', 'property_category', array('slug' => 'sold'));
     }
+    if (!term_exists('Wanted', 'property_category')) {
+        wp_insert_term('Wanted', 'property_category', array('slug' => 'wanted'));
+    }
 
     // Add default property types
-    $types = array('House', 'Apartment', 'Condo', 'Villa', 'Studio', 'Townhouse');
+    $types = array('House', 'Apartment', 'Flat', 'Studio', 'Townhouse');
     foreach ($types as $type) {
         if (!term_exists($type, 'property_type')) {
             wp_insert_term($type, 'property_type', array('slug' => strtolower($type)));
