@@ -21,7 +21,7 @@ endif;
                 ?>
                 <?php if (!empty($opening_times['monday_closed']) || !empty($opening_times['monday_from'])): ?>
                     <p class="footer-hours">
-                        Mon-Thurs
+                        <?php echo esc_html('Sun-Thurs'); ?>
                         <?php if (!empty($opening_times['monday_closed'])): ?>
                             Closed
                         <?php else: ?>
@@ -43,7 +43,7 @@ endif;
 
                 <?php if (!empty($opening_times['saturday_closed']) || !empty($opening_times['saturday_from'])): ?>
                     <p class="footer-hours">
-                        Sat-Sun
+                        <?php echo esc_html('Saturday'); ?>
                         <?php if (!empty($opening_times['saturday_closed'])): ?>
                             Closed
                         <?php else: ?>

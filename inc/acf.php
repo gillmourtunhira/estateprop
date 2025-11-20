@@ -21,6 +21,7 @@ function add_agent_user_fields()
                 'label' => 'Phone Number',
                 'name' => 'agent_phone',
                 'type' => 'text',
+                'instructions' => 'Just the number without the first 0 (e.g., 771234567)',
                 'required' => 0,
                 'wrapper' => [
                     'width' => '50',
