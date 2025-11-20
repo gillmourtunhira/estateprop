@@ -106,7 +106,7 @@ endif;
             <!-- Newsletter -->
             <div class="col-lg-2 col-md-12">
                 <h5 class="footer-heading">Newsletter</h5>
-                <p class="newsletter-text">Subscribe to our newletter</p>
+                <p class="newsletter-text">Subscribe to our Mailing List</p>
                 <?php if (crafted_get_newsletter_shortcode()): ?>
                     <div class="newsletter-form">
                         <?php echo do_shortcode(crafted_get_newsletter_shortcode()); ?>

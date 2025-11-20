@@ -234,3 +234,48 @@ function get_acf_block_data($post_id, $block_name = 'acf/property-block')
 
     return [];
 }
+
+/**
+ * Set site title to replace wordpress logo on login screen
+ *
+ * @param string $title
+ * @return string
+ */
+
+function crafted_login_logo()
+{
+    $custom_logo_id = get_theme_mod('custom_logo');
+    $logo = wp_get_attachment_image_src($custom_logo_id, 'full');
+?>
+    <style type="text/css">
+        #login h1 a,
+        .login h1 a {
+            <?php if (has_custom_logo()) : ?>background-image: url(<?php echo esc_url($logo[0]); ?>);
+            background-size: contain;
+            width: 100%;
+            height: 100px;
+            <?php else : ?>background-image: none;
+            width: auto;
+            height: auto;
+            text-indent: 0;
+            <?php endif; ?>
+        }
+    </style>
+<?php
+}
+add_action('login_enqueue_scripts', 'crafted_login_logo');
+
+function crafted_login_headertext($text)
+{
+    if (has_custom_logo()) {
+        return '';
+    } else {
+        return get_bloginfo('name');
+    }
+}
+add_filter('login_headertext', 'crafted_login_headertext');
+function crafted_login_logo_url()
+{
+    return home_url();
+}
+add_filter('login_headerurl', 'crafted_login_logo_url');
