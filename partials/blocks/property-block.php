@@ -311,43 +311,39 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         </a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <!--Whatsapp Button-->
-                        <div class="whatsapp-button my-1 my-lg-3">
-                            <?php
-                            $whatsapp_phone = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_whatsapp', true));
+                <div class="contact__buttons">
+                    <!--Whatsapp Button-->
+                    <div class="contact__buttons--whatsapp">
+                        <?php
+                        $whatsapp_phone = sanitize_text_field(get_user_meta($agent_info['ID'], 'agent_whatsapp', true));
 
-                            if ($whatsapp_phone) :
-                                $cleaned_phone = preg_replace('/\D+/', '', $whatsapp_phone); // Remove non-digit characters
-                                $property_title = get_the_title();
-                                $property_link = get_permalink();
-                                $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
-                                $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
-                            ?>
-                                <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                        <!--End Whatsapp Button-->
+                        if ($whatsapp_phone) :
+                            $cleaned_phone = preg_replace('/\D+/', '', $whatsapp_phone); // Remove non-digit characters
+                            $property_title = get_the_title();
+                            $property_link = get_permalink();
+                            $whatsapp_text = rawurlencode("Good day {$agent_fullname}, I want to enquire about property {$property_title}. You can view it here: {$property_link}");
+                            $whatsapp_link = 'https://wa.me/+263' . $cleaned_phone . '?text=' . $whatsapp_text;
+                        ?>
+                            <a href="<?php echo esc_url($whatsapp_link); ?>" target="_blank" class="btn btn-success w-100">
+                                <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
+                            </a>
+                        <?php endif; ?>
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <!--Call Button-->
-                        <div class="call-button my-1 my-lg-3">
-                            <?php
-                            $agent_phone = get_user_meta($agent_info['ID'], 'agent_phone', true);
-                            if ($agent_phone) :
-                                $cleaned_phone = preg_replace('/\D+/', '', $agent_phone); // Remove non-digit characters
-                                $tel_link = 'tel:+263' . $cleaned_phone;
-                            ?>
-                                <a href="<?php echo esc_url($tel_link); ?>" class="btn btn-primary w-100">
-                                    <i class="fa-solid fa-phone me-2"></i> Call Agent
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                        <!--End Call Button-->
+                    <!--End Whatsapp Button-->
+                    <!--Call Button-->
+                    <div class="contact__buttons--call">
+                        <?php
+                        $agent_phone = get_user_meta($agent_info['ID'], 'agent_phone', true);
+                        if ($agent_phone) :
+                            $cleaned_phone = preg_replace('/\D+/', '', $agent_phone); // Remove non-digit characters
+                            $tel_link = 'tel:+263' . $cleaned_phone;
+                        ?>
+                            <a href="<?php echo esc_url($tel_link); ?>" class="btn btn-primary w-100">
+                                <i class="fa-solid fa-phone me-2"></i> Call Agent
+                            </a>
+                        <?php endif; ?>
                     </div>
+                    <!--End Call Button-->
                 </div>
                 <!-- Map -->
                 <?php if ($map_option && !empty($latitude && $longitude)) :
@@ -385,7 +381,7 @@ $author_name = get_the_author_meta('display_name', $post_author_id);
                         </div>
                         <div>
                             <strong><?php echo ($agent_fullname) ? $agent_fullname : $author_name; ?></strong><br>
-                            <small><?php echo get_user_meta($agent_info['ID'], 'agent_phone', true); ?></small><br>
+                            <small><?php echo '+263' . get_user_meta($agent_info['ID'], 'agent_phone', true); ?></small><br>
                             <small class="text-white">
                                 <?php echo ($agent_info) ? $agent_info['user_email'] : get_user_meta($agent_info['ID'], 'agent_contact_email', true); ?>
                             </small>

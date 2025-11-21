@@ -318,6 +318,28 @@
             }
         }
     }
+
+    .contact__buttons {
+        display: grid;
+        grid-template-areas: "whatsapp call";
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1rem;
+        &--whatsapp {
+            grid-area: whatsapp;
+        }
+        &--call {
+            grid-area: call;
+        }
+
+        @media screen and (max-width: 1200px) {
+            grid-template-areas:
+                "whatsapp"
+                "call";
+            grid-template-columns: 1fr;
+            grid-gap: 0.5rem;
+        }
+    }
+
     .contact-agent h5 {
         font-weight: 700;
     }
