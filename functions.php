@@ -142,13 +142,15 @@ function remove_features()
 add_action("init", "remove_features");
 
 // SVG support
-function add_svg_support($file_types)
+function add_modern_image_support($file_types)
 {
     $new_filetypes = [];
     $new_filetypes["svg"] = "image/svg+xml";
+    $new_filetypes["webp"] = "image/webp";
+    $new_filetypes["avif"] = "image/avif";
     return array_merge($file_types, $new_filetypes);
 }
-add_filter("upload_mimes", "add_svg_support");
+add_filter("upload_mimes", "add_modern_image_support");
 
 function svg_sanitization($data, $file, $filename, $mimes)
 {

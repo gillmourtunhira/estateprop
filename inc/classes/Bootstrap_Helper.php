@@ -365,8 +365,22 @@ class Bootstrap_Image_Helper
             $modern_file = $base_dir . '/' . $size_info['filename'] . '.' . $format;
         }
 
-        // Check if the file exists
-        if ($modern_file && file_exists($modern_file)) {
+        /**
+         * Filter the path to the modern image format.
+         *
+         * @param string $modern_file The path to the modern image format.
+         * @param string $original_url The original image URL.
+         * @param string $format The format to check for ('webp' or 'avif').
+         * @param string $base_dir The base directory path.
+         * @param string $base_name The base filename without extension.
+         * @param string $size_name The image size name.
+         * @param array $metadata The attachment metadata.
+         */
+        $modern_file = apply_filters('crafted_theme_modern_image_path', $modern_file, $original_url, $format, $base_dir, $base_name, $size_name, $metadata);
+
+
+        // Check if the file exists and is readable
+        if ($modern_file && file_exists($modern_file) && is_readable($modern_file)) {
             // Convert file path to URL
             $upload_dir = wp_upload_dir();
             $modern_url = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $modern_file);
