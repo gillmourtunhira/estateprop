@@ -12,6 +12,14 @@
         max-width: 860px;
         margin: 0 auto;
         margin-bottom: 2rem;
+
+        @media screen and (max-width: 576px) {
+            position: relative;
+            bottom: 90px;
+            padding: 1rem;
+            margin-bottom: 0;
+        }
+
         .filter-box {
             border-radius: 12px;
             padding: 40px;

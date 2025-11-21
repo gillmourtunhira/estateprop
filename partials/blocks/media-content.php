@@ -17,7 +17,7 @@ $image = get_sub_field("image");
                 <?php echo $top_content; ?>
             </div>
         <?php } ?>
-        <div class="row align-items-center justify-content-between g-0">
+        <div class="row align-items-center justify-content-between gy-5 g-lg-0">
             <div class="col-12 col-lg-5 content-container p-lg-0 text-<?php echo $text_colour; ?> <?php echo ($image_alignment == 'right' ? 'order-lg-0' : 'order-lg-1') ?>">
                 <?php echo $content; ?>
                 <?php if ($button_link) { ?>
